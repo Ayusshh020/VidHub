@@ -55,7 +55,9 @@ int main() {
     // Expected:  Mumbai → Bangalore → Singapore → User = 8+15+5 = 28ms
     // Alt path:  Mumbai → Delhi → Singapore → User     = 10+20+5 = 35ms
     // Alt path:  Mumbai → Delhi → London → User        = 10+25+30 = 65ms
-    auto [cost1, path1] = cdn.dijkstra(0, 5);
+    auto res1 = cdn.dijkstra(0, 5);
+    int cost1 = res1.first;
+    std::vector<int> path1 = res1.second;
     assert(cost1 == 28);
     assert(path1.size() == 4);
     assert(path1[0] == 0);  // Mumbai
@@ -65,7 +67,9 @@ int main() {
     std::cout << "[PASS] dijkstra(Mumbai→User) = 28ms via Bangalore+Singapore\n";
 
     // ── Test 3: Route to self ─────────────────────────────────
-    auto [selfCost, selfPath] = cdn.dijkstra(0, 0);
+    auto resSelf = cdn.dijkstra(0, 0);
+    int selfCost = resSelf.first;
+    std::vector<int> selfPath = resSelf.second;
     assert(selfCost     == 0);
     assert(selfPath.size() == 1);
     assert(selfPath[0]  == 0);
@@ -73,7 +77,9 @@ int main() {
 
     // ── Test 4: Dijkstra from Delhi ──────────────────────────
     // Delhi → User: Delhi→Singapore→User = 20+5=25ms
-    auto [cost2, path2] = cdn.dijkstra(1, 5);
+    auto res2 = cdn.dijkstra(1, 5);
+    int cost2 = res2.first;
+    std::vector<int> path2 = res2.second;
     assert(cost2 == 25);
     assert(path2[0] == 1);   // Delhi
     assert(path2[1] == 3);   // Singapore
@@ -90,7 +96,9 @@ int main() {
     // ── Test 6: No path (isolated node) ──────────────────────
     DeliveryOptimizer tiny(3);
     tiny.addEdge(0, 1, 10);  // Node 2 is isolated
-    auto [noPathCost, noPath] = tiny.dijkstra(0, 2);
+    auto resNoPath = tiny.dijkstra(0, 2);
+    int noPathCost = resNoPath.first;
+    std::vector<int> noPath = resNoPath.second;
     assert(noPathCost == -1);
     assert(noPath.empty());
     std::cout << "[PASS] dijkstra returns -1 for unreachable node\n";
@@ -98,7 +106,9 @@ int main() {
     // ── Test 7: updateEdgeCost() — simulate congestion ────────
     // Congestion on Bangalore→Singapore: cost 15 → 50ms
     cdn.updateEdgeCost(2, 3, 50);
-    auto [cost3, path3] = cdn.dijkstra(0, 5);
+    auto res3 = cdn.dijkstra(0, 5);
+    int cost3 = res3.first;
+    std::vector<int> path3 = res3.second;
     // Now Mumbai→Bangalore→Singapore = 8+50+5=63ms
     // Mumbai→Delhi→Singapore = 10+20+5=35ms  ← new winner
     assert(cost3 == 35);
@@ -110,7 +120,9 @@ int main() {
 
     // ── Test 8: Restore edge and verify re-routing ────────────
     cdn.updateEdgeCost(2, 3, 15);  // Restore
-    auto [cost4, path4] = cdn.dijkstra(0, 5);
+    auto res4 = cdn.dijkstra(0, 5);
+    int cost4 = res4.first;
+    std::vector<int> path4 = res4.second;
     assert(cost4 == 28);            // Back to Bangalore route
     std::cout << "[PASS] After restoring Bangalore, optimal route returns to 28ms\n";
 

@@ -87,7 +87,9 @@ DeliveryOptimizer::dijkstra(int src, int dest) const {
     pq.push({0, src});
 
     while (!pq.empty()) {
-        auto [currentCost, u] = pq.top();
+        auto topNode = pq.top();
+        int currentCost = topNode.first;
+        int u = topNode.second;
         pq.pop();
 
         // Skip stale entries (a shorter path was already found)
@@ -97,7 +99,9 @@ DeliveryOptimizer::dijkstra(int src, int dest) const {
         if (u == dest) break;
 
         // Relax all edges from u
-        for (const auto& [v, edgeCost] : adjList[u]) {
+        for (const auto& edge : adjList[u]) {
+            int v = edge.first;
+            int edgeCost = edge.second;
             int newDist = dist[u] + edgeCost;
             if (newDist < dist[v]) {
                 dist[v] = newDist;
@@ -178,7 +182,9 @@ void DeliveryOptimizer::displayRoute(int src, int dest) const {
     std::cout << "  To   : " << getNodeName(dest) << "\n";
     printDODivider('=');
 
-    auto [cost, path] = dijkstra(src, dest);
+    auto result = dijkstra(src, dest);
+    int cost = result.first;
+    std::vector<int> path = result.second;
 
     if (cost == -1) {
         std::cout << "  \xE2\x9D\x8C  No route found between these nodes.\n";
@@ -214,7 +220,9 @@ void DeliveryOptimizer::displayAllRoutes(int src) const {
 
     for (int dest = 0; dest < V; ++dest) {
         if (dest == src) continue;
-        auto [cost, path] = dijkstra(src, dest);
+        auto result = dijkstra(src, dest);
+        int cost = result.first;
+        std::vector<int> path = result.second;
 
         std::cout << "  " << std::left << std::setw(22) << getNodeName(dest);
         if (cost == -1) {
