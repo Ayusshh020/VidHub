@@ -32,12 +32,11 @@
 //  Owned by: ConsoleUI (one global instance for the platform)
 // =============================================================
 
-// Constant for "no path" / infinity
-// inline constexpr: single definition shared across all TUs (C++17).
-// Avoids the ODR violation that 'static const' causes in headers.
-inline constexpr int INF = std::numeric_limits<int>::max();
-
 class DeliveryOptimizer {
+public:
+    // Constant for "no path" / infinity
+    // Defined inside the class as static constexpr for pre-C++17 compatibility.
+    static constexpr int INF = std::numeric_limits<int>::max();
 private:
     int V;  // Number of CDN nodes
 
