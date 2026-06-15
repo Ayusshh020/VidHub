@@ -1,0 +1,19 @@
+# Compiled binaries
+test_video
+test_entities
+test_wh
+test_rq
+test_lr
+test_cat
+test_rs
+test_seg
+test_sn
+test_do
+vidhub
+
+# Build artifacts
+*.o
+*.out
+
+# macOS
+.DS_Store
