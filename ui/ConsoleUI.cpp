@@ -74,7 +74,6 @@ int ConsoleUI::getIntInput(const std::string& prompt, int min, int max) const {
 std::string ConsoleUI::getStringInput(const std::string& prompt) const {
     std::cout << prompt;
     std::string s;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::getline(std::cin, s);
     return s;
 }
