@@ -26,8 +26,6 @@ std::string SharingNetwork::getExactNodeName(const std::string& name) const {
     return name;
 }
 
-// Record a directed share edge: fromUser → toUser.
-// Both nodes are auto-registered if not present.
 void SharingNetwork::addShare(const std::string& fromUser,
                                const std::string& toUser) {
     std::string resolvedFrom = getExactNodeName(fromUser);
@@ -39,8 +37,6 @@ void SharingNetwork::addShare(const std::string& fromUser,
         if (n == resolvedTo) return;
     neighbors.push_back(resolvedTo);
 }
-
-// Performs Breadth-First Search (BFS) starting from the given source node.
 
 std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     std::vector<std::string>        result;
@@ -71,8 +67,6 @@ std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     return result;
 }
 
-// BFS with level separation — each inner vector is one hop away.
-// Level 0 = source, Level 1 = direct shares, Level 2 = reshares...
 std::vector<std::vector<std::string>>
 SharingNetwork::BFSLevels(const std::string& source) const {
     std::vector<std::vector<std::string>> levels;
@@ -109,8 +103,6 @@ SharingNetwork::BFSLevels(const std::string& source) const {
     return levels;
 }
 
-// Recursively traverses the network using Depth-First Search (DFS).
-
 void SharingNetwork::dfsHelper(const std::string& node,
                                 std::unordered_set<std::string>& visited,
                                 std::vector<std::string>& result) const {
@@ -136,11 +128,6 @@ std::vector<std::string> SharingNetwork::DFS(const std::string& source) const {
     return result;
 }
 
-// =============================================================
-//  ANALYTICS
-// =============================================================
-
-// Total nodes reachable from source (including source itself)
 int SharingNetwork::getReachCount(const std::string& source) const {
     return static_cast<int>(BFS(source).size());
 }
@@ -173,10 +160,6 @@ bool SharingNetwork::hasEdge(const std::string& from,
         if (n == resolvedTo) return true;
     return false;
 }
-
-// =============================================================
-//  DISPLAY
-// =============================================================
 
 void SharingNetwork::displayNetwork() const {
     std::cout << "\n";

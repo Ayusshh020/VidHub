@@ -1,3 +1,4 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "ConsoleUI.h"
 #include "../utils/Helpers.h"
 
@@ -6,26 +7,15 @@
 #include <algorithm>
 #include <string>
 
-// ─────────────────────────────────────────────────────────────
-//  Platform constants
-// ─────────────────────────────────────────────────────────────
 static const std::string VIDHUB_VERSION = "1.0.0";
-
-// =============================================================
-//  CONSTRUCTOR
-// =============================================================
 
 ConsoleUI::ConsoleUI(DummyData& data)
     : data(data),
       activeUserId(""),
       activeRole(""),
-      activeWatchHistory(20),        // Cap at 20 videos per session
-      activeRecommendations(8)       // Cap at 8 recommendations
+      activeWatchHistory(20),
+      activeRecommendations(8)
 {}
-
-// =============================================================
-//  INTERNAL HELPERS
-// =============================================================
 
 void ConsoleUI::clearScreen() const {
 #ifdef _WIN32
@@ -37,7 +27,6 @@ void ConsoleUI::clearScreen() const {
 
 void ConsoleUI::printBanner() const {
     std::cout << "\n";
-    // Build a repeated box-drawing border (═ is 3-byte UTF-8: E2 95 90)
     std::string border;
     for (int i = 0; i < 60; ++i) border += "\xE2\x95\x90";
 
@@ -55,7 +44,6 @@ void ConsoleUI::printSectionHeader(const std::string& title) const {
     std::cout << "  " << std::string(58, '=') << "\n";
 }
 
-// Safe integer input — loops until user enters valid number
 int ConsoleUI::getIntInput(const std::string& prompt, int min, int max) const {
     int val;
     while (true) {
@@ -70,17 +58,12 @@ int ConsoleUI::getIntInput(const std::string& prompt, int min, int max) const {
     }
 }
 
-// Read full line of text
 std::string ConsoleUI::getStringInput(const std::string& prompt) const {
     std::cout << prompt;
     std::string s;
     std::getline(std::cin, s);
     return s;
 }
-
-// =============================================================
-//  ENTITY FINDERS
-// =============================================================
 
 User* ConsoleUI::findUser(const std::string& userId) {
     for (auto& u : data.users)
@@ -99,10 +82,6 @@ Video* ConsoleUI::findVideo(const std::string& videoId) {
         if (toLower(v.videoId) == toLower(videoId)) return &v;
     return nullptr;
 }
-
-// =============================================================
-//  SESSION SELECTION
-// =============================================================
 
 void ConsoleUI::selectSession() {
     printBanner();
@@ -128,7 +107,6 @@ void ConsoleUI::selectSession() {
     std::cout << "\n";
     int choice = getIntInput("  Select session [1-" + std::to_string(idx - 1) + "]: ", 1, idx - 1);
 
-    // Map choice to entity
     int total_users    = static_cast<int>(data.users.size());
     int total_creators = static_cast<int>(data.creators.size());
 
@@ -148,14 +126,9 @@ void ConsoleUI::selectSession() {
         std::cout << "\n  \xE2\x9C\x85  Logged in as Admin: " << data.admin.getName() << "\n";
     }
 
-    // Reset per-session state
     activeWatchHistory     = WatchHistory(20);
     activeRecommendations  = RecommendationQueue(8);
 }
-
-// =============================================================
-//  VIDEO WATCH — shared by viewer and creator
-// =============================================================
 
 void ConsoleUI::watchVideo(const std::string& videoId) {
     Video* vp = findVideo(videoId);
@@ -164,20 +137,15 @@ void ConsoleUI::watchVideo(const std::string& videoId) {
         return;
     }
 
-    // Simulate watching
     vp->incrementViews();
     int watchSec = vp->durationSec;
     vp->addWatchTime(watchSec);
-    vp->addLike();              // Auto-like for demo simplicity
+    vp->addLike();
     vp->recalculateScore();
 
-    // Update ranking
     data.rankingSystem.updateVideo(*vp);
-
-    // Push to watch history
     activeWatchHistory.push(*vp);
 
-    // Segment the video and show progress bar
     VideoSegmentManager vsm(vp->videoId, vp->durationSec);
     vsm.segmentVideo(30, "720p");
 
@@ -185,15 +153,10 @@ void ConsoleUI::watchVideo(const std::string& videoId) {
     vp->displayFull();
     vsm.displayPlaybackStatus(vsm.getTotalSegments());
 
-    // Populate recommendations for next time
     activeRecommendations.populate(vp->genre, vp->videoId, data.videos);
     std::cout << "  \xF0\x9F\x8E\xAF  " << activeRecommendations.getSize()
               << " recommendations queued.\n";
 }
-
-// =============================================================
-//  VIEWER MENU
-// =============================================================
 
 void ConsoleUI::viewerMenu() {
     while (true) {
@@ -223,10 +186,6 @@ void ConsoleUI::viewerMenu() {
     }
 }
 
-// =============================================================
-//  CREATOR MENU
-// =============================================================
-
 void ConsoleUI::creatorMenu() {
     while (true) {
         printSectionHeader("  \xF0\x9F\x8E\xAC  Creator Menu");
@@ -255,10 +214,6 @@ void ConsoleUI::creatorMenu() {
     }
 }
 
-// =============================================================
-//  ADMIN MENU
-// =============================================================
-
 void ConsoleUI::adminMenu() {
     while (true) {
         printSectionHeader("  \xE2\x9A\x99\xEF\xB8\x8F  Admin Panel");
@@ -286,10 +241,6 @@ void ConsoleUI::adminMenu() {
         }
     }
 }
-
-// =============================================================
-//  VIEWER FEATURES
-// =============================================================
 
 void ConsoleUI::showHomeFeed() {
     printSectionHeader("  \xF0\x9F\x8F\xA0  Home Feed — Top 10 Videos");
@@ -345,10 +296,6 @@ void ConsoleUI::playNextRecommendation() {
     watchVideo(next.videoId);
 }
 
-// =============================================================
-//  CREATOR FEATURES
-// =============================================================
-
 void ConsoleUI::showCreatorDashboard() {
     Creator* cp = findCreator(activeUserId);
     if (!cp) { std::cout << "  Creator not found.\n"; return; }
@@ -367,13 +314,11 @@ void ConsoleUI::uploadVideo() {
     std::string licKey  = getStringInput("  License Key: ");
     int         dur     = getIntInput("  Duration (sec) [30-7200]: ", 30, 7200);
 
-    // License verification (Hash Map O(1))
     if (!data.licenseRegistry.verify(licKey)) {
         std::cout << "\n  \xE2\x9D\x8C  License \"" << licKey << "\" is invalid or revoked. Upload rejected.\n";
         return;
     }
 
-    // Generate new video ID
     std::string newId = "VID-0" + std::to_string(data.videos.size() + 1);
     std::string date  = "2024-06-15";
 
@@ -401,7 +346,6 @@ void ConsoleUI::deleteVideo() {
 
     std::string vid = getStringInput("  Enter Video ID to delete: ");
 
-    // Check ownership
     auto ids = cp->getUploadedVideoIds();
     bool owns = false;
     for (const auto& id : ids) if (toLower(id) == toLower(vid)) { owns = true; break; }
@@ -419,10 +363,6 @@ void ConsoleUI::deleteVideo() {
 
     std::cout << "  \xE2\x9C\x85  Video " << vid << " deleted.\n";
 }
-
-// =============================================================
-//  ADMIN FEATURES
-// =============================================================
 
 void ConsoleUI::showAdminDashboard() {
     printSectionHeader("  \xE2\x9A\x99\xEF\xB8\x8F  Admin Dashboard");
@@ -492,10 +432,6 @@ void ConsoleUI::revokeLicense() {
     else
         std::cout << "  \xE2\x9D\x8C  License key not found.\n";
 }
-
-// =============================================================
-//  ENTRY POINT
-// =============================================================
 
 void ConsoleUI::run() {
     clearScreen();

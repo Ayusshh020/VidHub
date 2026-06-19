@@ -1,24 +1,15 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "Creator.h"
 
 #include <iostream>
 #include <iomanip>
-#include <algorithm>   // std::find, std::remove
+#include <algorithm>
 #include <string>
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
 
 static void printCreatorDivider() {
     std::cout << "  " << std::string(50, '-') << "\n";
 }
 
-// =============================================================
-//  CONSTRUCTORS
-// =============================================================
-
-// Default constructor — zeroed channel data.
-// Role is hardcoded to "creator" so menus route correctly.
 Creator::Creator()
     : User(),
       channelName(""),
@@ -27,8 +18,6 @@ Creator::Creator()
     role = "creator";
 }
 
-// Parameterized constructor — used by DummyData.
-// Role is hardcoded to "creator"; no caller should override it.
 Creator::Creator(std::string userId,
                  std::string name,
                  std::string email,
@@ -40,34 +29,19 @@ Creator::Creator(std::string userId,
       subscriberCount(subscriberCount)
 {}
 
-// =============================================================
-//  UPLOAD RECORD MANAGEMENT
-// =============================================================
-
-// Record that this creator uploaded a video.
-// Called by ConsoleUI after the full upload workflow succeeds
-// (license verified → BST inserted → Heap inserted → segmented).
-// Does NOT insert video anywhere — Creator is a data holder only.
 void Creator::addUploadedVideo(const std::string& videoId) {
-    // Guard: avoid duplicate entries
     for (const auto& id : uploadedVideoIds) {
         if (id == videoId) return;
     }
     uploadedVideoIds.push_back(videoId);
 }
 
-// Remove a video ID from this creator's record.
-// Called when ConsoleUI handles a "delete video" action.
 void Creator::removeUploadedVideo(const std::string& videoId) {
     uploadedVideoIds.erase(
         std::remove(uploadedVideoIds.begin(), uploadedVideoIds.end(), videoId),
         uploadedVideoIds.end()
     );
 }
-
-// =============================================================
-//  GETTERS
-// =============================================================
 
 std::string              Creator::getChannelName()     const { return channelName;      }
 long                     Creator::getSubscriberCount() const { return subscriberCount;  }
@@ -76,15 +50,6 @@ int                      Creator::getTotalUploads()    const {
     return static_cast<int>(uploadedVideoIds.size());
 }
 
-// =============================================================
-//  DISPLAY
-// =============================================================
-
-// One-line summary — used in creator selection menus and
-// admin overview lists.
-//
-// Output:
-//   [USR-003] Arjun Dev              | Uploads: 3 | Subscribers: 12,400
 void Creator::displaySummary() const {
     std::cout << "  ["
               << std::left << std::setw(7)  << userId      << "] "
@@ -94,25 +59,6 @@ void Creator::displaySummary() const {
               << "\n";
 }
 
-// Full profile block — used on "Creator Dashboard" screen.
-//
-// Output:
-//   --------------------------------------------------
-//   🎬  Arjun Dev  [CREATOR]
-//   --------------------------------------------------
-//     User ID      : USR-003
-//     Real Name    : Arjun Dev
-//     Email        : arjun@vidhub.com
-//     Region       : Bangalore
-//     Channel      : Arjun Dev
-//     Subscribers  : 12,400
-//     Total Uploads: 3
-//   --------------------------------------------------
-//   Uploaded Video IDs:
-//     [1] VID-002
-//     [2] VID-003
-//     [3] VID-007
-//   --------------------------------------------------
 void Creator::displayFull() const {
     printCreatorDivider();
     std::cout << "  \xF0\x9F\x8E\xAC  " << channelName << "  [CREATOR]\n";

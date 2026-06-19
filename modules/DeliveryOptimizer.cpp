@@ -15,10 +15,6 @@ DeliveryOptimizer::DeliveryOptimizer(int nodeCount)
     : V(nodeCount), adjList(nodeCount)
 {}
 
-// =============================================================
-//  GRAPH CONSTRUCTION
-// =============================================================
-
 void DeliveryOptimizer::setNodeName(int nodeId, const std::string& name) {
     nodeNames[nodeId] = name;
 }
@@ -28,7 +24,6 @@ void DeliveryOptimizer::addEdge(int u, int v, int costMs) {
     adjList[v].push_back({u, costMs});
 }
 
-// Updates/inserts edge cost for bidirectional edge.
 void DeliveryOptimizer::updateEdgeCost(int u, int v, int newCostMs) {
     bool updated = false;
     for (auto& edge : adjList[u]) {
@@ -40,13 +35,11 @@ void DeliveryOptimizer::updateEdgeCost(int u, int v, int newCostMs) {
     if (!updated) addEdge(u, v, newCostMs);
 }
 
-// Finds the shortest path between src and dest using Dijkstra's algorithm.
 std::pair<int, std::vector<int>>
 DeliveryOptimizer::dijkstra(int src, int dest) const {
     std::vector<int> dist(V, INF);
     std::vector<int> prev(V, -1);
 
-    // Min-heap storing {cost, nodeId}
     using pii = std::pair<int, int>;
     std::priority_queue<pii, std::vector<pii>, std::greater<pii>> pq;
 
@@ -80,7 +73,6 @@ DeliveryOptimizer::dijkstra(int src, int dest) const {
     return {dist[dest], reconstructPath(prev, src, dest)};
 }
 
-// Reconstructs the shortest path from destination back to source.
 std::vector<int>
 DeliveryOptimizer::reconstructPath(const std::vector<int>& prev,
                                     int src, int dest) const {
@@ -93,10 +85,6 @@ DeliveryOptimizer::reconstructPath(const std::vector<int>& prev,
     return path;
 }
 
-// =============================================================
-//  UTILITY
-// =============================================================
-
 std::string DeliveryOptimizer::getNodeName(int nodeId) const {
     auto it = nodeNames.find(nodeId);
     if (it != nodeNames.end()) return it->second;
@@ -105,10 +93,6 @@ std::string DeliveryOptimizer::getNodeName(int nodeId) const {
 
 int DeliveryOptimizer::getNodeCount() const { return V; }
 
-// =============================================================
-//  DISPLAY
-// =============================================================
-
 void DeliveryOptimizer::displayGraph() const {
     std::cout << "\n";
     printDODivider('=');
@@ -116,7 +100,7 @@ void DeliveryOptimizer::displayGraph() const {
     printDODivider('=');
 
     for (int u = 0; u < V; ++u) {
-        std::cout << "  " << std::left << std::setw(20) << getNodeName(u) << " \xE2\x86\x94  ";
+        std::cout << "  " << std::left << std::setw(20) << getNodeName(u) << " \xE2\x86\x92  ";
         if (adjList[u].empty()) {
             std::cout << "(isolated)\n";
             continue;
@@ -132,7 +116,6 @@ void DeliveryOptimizer::displayGraph() const {
     std::cout << "\n";
 }
 
-// Run Dijkstra and display the result beautifully
 void DeliveryOptimizer::displayRoute(int src, int dest) const {
     std::cout << "\n";
     printDODivider('=');
@@ -152,7 +135,6 @@ void DeliveryOptimizer::displayRoute(int src, int dest) const {
         return;
     }
 
-    // Print path as a chain
     std::cout << "  Route: ";
     for (int i = 0; i < static_cast<int>(path.size()); ++i) {
         if (i > 0) std::cout << " \xE2\x86\x92 ";
@@ -166,7 +148,6 @@ void DeliveryOptimizer::displayRoute(int src, int dest) const {
     std::cout << "\n";
 }
 
-// Show cheapest route from src to every other node
 void DeliveryOptimizer::displayAllRoutes(int src) const {
     std::cout << "\n";
     printDODivider('=');

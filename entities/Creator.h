@@ -1,33 +1,17 @@
 #pragma once
+// Note: Comments are only for understanding—do not modify the code itself.
 
 #include "User.h"
 #include <string>
 #include <vector>
 
-// =============================================================
-//  Creator — A User who can upload and manage videos.
-//
-//  Inherits all User fields (userId, name, email, region, role).
-//  Adds a channel identity and a record of uploaded video IDs.
-//
-//  Note: Creator does NOT implement upload logic.
-//  The upload workflow (license check, BST insert, heap insert,
-//  segmentation) is coordinated by ConsoleUI using the
-//  appropriate DSA modules. Creator is just the data holder.
-// =============================================================
-
 class Creator : public User {
 public:
-    // ── Channel Identity ─────────────────────────────────────
-    std::string channelName;              // e.g. "Arjun Dev"
-    long        subscriberCount;          // Total subscribers
+    std::string channelName;
+    long subscriberCount;
 
-    // ── Upload Record ────────────────────────────────────────
-    // Stores IDs of videos this creator has uploaded.
-    // Actual Video objects live in VideoCatalog (BST).
     std::vector<std::string> uploadedVideoIds;
 
-    // ── Constructors ─────────────────────────────────────────
     Creator();
 
     Creator(std::string userId,
@@ -37,17 +21,14 @@ public:
             std::string channelName,
             long subscriberCount = 0);
 
-    // ── Upload Record Management ─────────────────────────────
-    void addUploadedVideo(const std::string& videoId);  // Record a new upload
-    void removeUploadedVideo(const std::string& videoId); // Remove from record
+    void addUploadedVideo(const std::string& videoId);
+    void removeUploadedVideo(const std::string& videoId);
 
-    // ── Getters ──────────────────────────────────────────────
-    std::string              getChannelName()     const;
-    long                     getSubscriberCount() const;
-    std::vector<std::string> getUploadedVideoIds()const;
-    int                      getTotalUploads()    const; // uploadedVideoIds.size()
+    std::string getChannelName() const;
+    long getSubscriberCount() const;
+    std::vector<std::string> getUploadedVideoIds() const;
+    int getTotalUploads() const;
 
-    // ── Display (overrides User) ──────────────────────────────
-    void displaySummary() const;          // [ID] ChannelName | Uploads | Subscribers
-    void displayFull()    const override; // All fields including upload list
+    void displaySummary() const;
+    void displayFull() const override;
 };

@@ -1,13 +1,5 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "DummyData.h"
-
-// =============================================================
-//  DummyData — Implementation
-//
-//  10 Videos, 5 Users, 3 Creators, 1 Admin
-//  5 Licenses (3 active, 1 revoked, 1 proprietary)
-//  6 CDN nodes for DeliveryOptimizer
-//  Realistic share graph for SharingNetwork
-// =============================================================
 
 DummyData::DummyData()
     : admin("USR-005", "Admin Kumar", "admin@vidhub.com", "System"),
@@ -21,8 +13,6 @@ DummyData::DummyData()
     loadRankings();
     loadSharingNetwork();
 
-    // ── CDN Graph (DeliveryOptimizer) ──────────────────────────
-    // Nodes
     deliveryOptimizer.setNodeName(0, "Mumbai-Origin");
     deliveryOptimizer.setNodeName(1, "Delhi-PoP");
     deliveryOptimizer.setNodeName(2, "Bangalore-PoP");
@@ -30,39 +20,25 @@ DummyData::DummyData()
     deliveryOptimizer.setNodeName(4, "London-Edge");
     deliveryOptimizer.setNodeName(5, "User-Local");
 
-    // Edges (latency in ms)
-    deliveryOptimizer.addEdge(0, 1, 10);   // Mumbai ↔ Delhi
-    deliveryOptimizer.addEdge(0, 2,  8);   // Mumbai ↔ Bangalore
-    deliveryOptimizer.addEdge(1, 3, 20);   // Delhi  ↔ Singapore
-    deliveryOptimizer.addEdge(2, 3, 15);   // Bangalore ↔ Singapore
-    deliveryOptimizer.addEdge(3, 5,  5);   // Singapore ↔ User
-    deliveryOptimizer.addEdge(1, 4, 25);   // Delhi ↔ London
-    deliveryOptimizer.addEdge(4, 5, 30);   // London ↔ User
+    deliveryOptimizer.addEdge(0, 1, 10);
+    deliveryOptimizer.addEdge(0, 2,  8);
+    deliveryOptimizer.addEdge(1, 3, 20);
+    deliveryOptimizer.addEdge(2, 3, 15);
+    deliveryOptimizer.addEdge(3, 5,  5);
+    deliveryOptimizer.addEdge(1, 4, 25);
+    deliveryOptimizer.addEdge(4, 5, 30);
 }
 
-// =============================================================
-//  LICENSES
-// =============================================================
 void DummyData::loadLicenses() {
     licenseRegistry.registerLicense({"MIT-AJ-002", "Arjun Dev",   "USR-003", "MIT",         "2026-06-01", true});
     licenseRegistry.registerLicense({"MIT-AJ-003", "Arjun Dev",   "USR-003", "MIT",         "2026-06-01", true});
     licenseRegistry.registerLicense({"CC-EDU-001", "CodeBase",    "USR-010", "CC",          "2025-12-31", true});
     licenseRegistry.registerLicense({"CC-HLTH-004","YogaLife",    "USR-004", "CC",          "2025-08-15", true});
     licenseRegistry.registerLicense({"PROP-RM-007","Riya Mehta",  "USR-001", "Proprietary", "NEVER",      true});
-    // Revoke one to demonstrate admin panel
     licenseRegistry.revokeLicense("CC-EDU-001");
 }
 
-// =============================================================
-//  VIDEOS — 10 realistic videos seeded across genres
-//
-//  Each video is inserted into:
-//    - videos[]       (raw pool for populate/search)
-//    - videoCatalog   (BST)
-//    - rankingSystem  (MaxHeap)
-// =============================================================
 void DummyData::loadVideos() {
-    // Helper lambda: make video + set engagement + recalculate score
     auto make = [](const std::string& id,
                    const std::string& title,
                    const std::string& creator,
@@ -97,9 +73,6 @@ void DummyData::loadVideos() {
     }
 }
 
-// =============================================================
-//  USERS (regular viewers)
-// =============================================================
 void DummyData::loadUsers() {
     users = {
         User("USR-001", "Riya Sharma",  "riya@vidhub.com",   "Mumbai"),
@@ -110,9 +83,6 @@ void DummyData::loadUsers() {
     };
 }
 
-// =============================================================
-//  CREATORS (with uploaded video records)
-// =============================================================
 void DummyData::loadCreators() {
     Creator c1("USR-003","Arjun Dev",  "arjun@vidhub.com",  "Bangalore","CodeWithArjun", 12400);
     c1.addUploadedVideo("VID-001");
@@ -129,32 +99,19 @@ void DummyData::loadCreators() {
     c2.addUploadedVideo("VID-009");
 
     Creator c3("USR-009","TechWorld",  "tech@vidhub.com",   "Noida",    "TechWorldHub",    340);
-    // New creator — no uploads yet
 
     creators = {c1, c2, c3};
 }
 
-// =============================================================
-//  ADMIN
-// =============================================================
 void DummyData::loadAdmin() {
-    // admin is already constructed in initializer list
-    // Nothing extra needed — admin has no personal data
 }
 
-// =============================================================
-//  RANKINGS — Feed all videos into the MaxHeap
-// =============================================================
 void DummyData::loadRankings() {
     for (const auto& v : videos)
         rankingSystem.addVideo(v);
 }
 
-// =============================================================
-//  SHARING NETWORK — Model viral spread of VID-003 "REST API"
-// =============================================================
 void DummyData::loadSharingNetwork() {
-    // Arjun uploads → direct followers share it
     sharingNetwork.addShare("Arjun Dev",    "Riya Sharma");
     sharingNetwork.addShare("Arjun Dev",    "TechForum-IN");
     sharingNetwork.addShare("Riya Sharma",  "Kabir Singh");

@@ -1,4 +1,5 @@
 #pragma once
+// Note: Comments are only for understanding—do not modify the code itself.
 
 #include "../entities/Video.h"
 #include "../entities/User.h"
@@ -15,26 +16,13 @@
 
 #include <vector>
 
-// =============================================================
-//  DummyData — Populates all DSA modules at application start.
-//
-//  Role: Pure data factory. Creates realistic test objects and
-//  feeds them into each DSA module via its public interface.
-//  No DSA logic lives here — only construction and loading.
-//
-//  Dependency rule: DummyData may include everything.
-//  Nothing else should include DummyData except main.cpp.
-// =============================================================
-
 class DummyData {
 public:
-    // Pre-built entity collections (public for ConsoleUI access)
     std::vector<Video>   videos;
     std::vector<User>    users;
     std::vector<Creator> creators;
     Admin                admin;
 
-    // DSA module instances (public — ConsoleUI holds references)
     LicenseRegistry      licenseRegistry;
     VideoCatalog         videoCatalog;
     RankingSystem        rankingSystem;
@@ -43,7 +31,6 @@ public:
     SharingNetwork       sharingNetwork;
     DeliveryOptimizer    deliveryOptimizer;
 
-    // Constructor: builds everything
     DummyData();
 
 private:
@@ -54,5 +41,4 @@ private:
     void loadAdmin();
     void loadRankings();
     void loadSharingNetwork();
-    // DeliveryOptimizer CDN graph built in constructor directly
 };
