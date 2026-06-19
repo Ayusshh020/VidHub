@@ -1,5 +1,6 @@
 // Note: Comments are only for understanding—do not modify the code itself.
 #include "VideoCatalog.h"
+#include "../utils/Helpers.h"
 
 #include <iostream>
 #include <iomanip>
@@ -8,13 +9,6 @@
 
 static void printVCDivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
-}
-
-// Convert string to lowercase for case-insensitive keyword search
-static std::string toLower(std::string s) {
-    std::transform(s.begin(), s.end(), s.begin(),
-                   [](unsigned char c) { return std::tolower(c); });
-    return s;
 }
 
 // =============================================================
@@ -83,7 +77,7 @@ VideoCatalog::removeHelper(BSTNode* node, const std::string& videoId) {
 
     // Search left and right subtrees (can't use BST shortcut
     // because we're matching on videoId, not title)
-    if (videoId == node->data.videoId) {
+    if (toLower(videoId) == toLower(node->data.videoId)) {
         // ── Found the node to delete ──────────────────────────
         nodeCount--;
 
@@ -170,14 +164,14 @@ void VideoCatalog::genreHelper(BSTNode* node,
                                 std::vector<Video>& result) const {
     if (node == nullptr) return;
     genreHelper(node->left, genre, result);
-    if (node->data.genre == genre)
+    if (toLower(node->data.genre) == genre)
         result.push_back(node->data);
     genreHelper(node->right, genre, result);
 }
 
 std::vector<Video> VideoCatalog::searchByGenre(const std::string& genre) const {
     std::vector<Video> result;
-    genreHelper(root, genre, result);
+    genreHelper(root, toLower(genre), result);
     return result;
 }
 
@@ -214,7 +208,7 @@ bool VideoCatalog::isEmpty()   const { return root == nullptr; }
 bool VideoCatalog::contains(const std::string& videoId) const {
     std::vector<Video> all = getAllSorted();
     for (const auto& v : all)
-        if (v.videoId == videoId) return true;
+        if (toLower(v.videoId) == toLower(videoId)) return true;
     return false;
 }
 

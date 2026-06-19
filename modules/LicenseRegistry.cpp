@@ -1,4 +1,5 @@
 #include "LicenseRegistry.h"
+#include "../utils/Helpers.h"
 
 #include <iostream>
 #include <iomanip>
@@ -69,18 +70,19 @@ void LicenseInfo::display() const {
 // Duplicate check: unordered_map::count() is O(1).
 // Returns false immediately if the key already exists.
 bool LicenseRegistry::registerLicense(const LicenseInfo& info) {
-    if (registry.count(info.licenseKey) > 0)
-        return false;                      // Duplicate key — reject
-    registry[info.licenseKey] = info;
+    std::string keyLower = toLower(info.licenseKey);
+    if (registry.count(keyLower) > 0)
+        return false;
+    registry[keyLower] = info;
     return true;
 }
 
 // Revoke a license — marks isActive = false but keeps the record.
 // Preserves audit trail. Does NOT erase from the map.
 bool LicenseRegistry::revokeLicense(const std::string& licenseKey) {
-    auto it = registry.find(licenseKey);
+    auto it = registry.find(toLower(licenseKey));
     if (it == registry.end())
-        return false;                      // Key not found
+        return false;
     it->second.isActive = false;
     return true;
 }
@@ -88,7 +90,7 @@ bool LicenseRegistry::revokeLicense(const std::string& licenseKey) {
 // Hard delete — permanently removes the entry.
 // Use sparingly; revoke() is preferred for accountability.
 bool LicenseRegistry::removeLicense(const std::string& licenseKey) {
-    return registry.erase(licenseKey) > 0;
+    return registry.erase(toLower(licenseKey)) > 0;
 }
 
 // =============================================================
@@ -103,21 +105,21 @@ bool LicenseRegistry::removeLicense(const std::string& licenseKey) {
 //
 // unordered_map::find() is O(1) average — no scan needed.
 bool LicenseRegistry::verify(const std::string& licenseKey) const {
-    auto it = registry.find(licenseKey);
+    auto it = registry.find(toLower(licenseKey));
     if (it == registry.end())
-        return false;                      // Not registered at all
-    return it->second.isActive;            // True only if still active
+        return false;
+    return it->second.isActive;
 }
 
 // Existence check regardless of active status.
 // Used by: admin inspection, duplicate prevention.
 bool LicenseRegistry::exists(const std::string& licenseKey) const {
-    return registry.count(licenseKey) > 0;
+    return registry.count(toLower(licenseKey)) > 0;
 }
 
 // Full info retrieval — caller MUST check exists() first.
 const LicenseInfo& LicenseRegistry::getInfo(const std::string& licenseKey) const {
-    return registry.at(licenseKey);        // at() throws if key missing
+    return registry.at(toLower(licenseKey));
 }
 
 // =============================================================

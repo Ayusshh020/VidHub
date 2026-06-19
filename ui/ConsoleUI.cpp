@@ -1,4 +1,5 @@
 #include "ConsoleUI.h"
+#include "../utils/Helpers.h"
 
 #include <iostream>
 #include <iomanip>
@@ -84,19 +85,19 @@ std::string ConsoleUI::getStringInput(const std::string& prompt) const {
 
 User* ConsoleUI::findUser(const std::string& userId) {
     for (auto& u : data.users)
-        if (u.getUserId() == userId) return &u;
+        if (toLower(u.getUserId()) == toLower(userId)) return &u;
     return nullptr;
 }
 
 Creator* ConsoleUI::findCreator(const std::string& userId) {
     for (auto& c : data.creators)
-        if (c.getUserId() == userId) return &c;
+        if (toLower(c.getUserId()) == toLower(userId)) return &c;
     return nullptr;
 }
 
 Video* ConsoleUI::findVideo(const std::string& videoId) {
     for (auto& v : data.videos)
-        if (v.videoId == videoId) return &v;
+        if (toLower(v.videoId) == toLower(videoId)) return &v;
     return nullptr;
 }
 
@@ -404,7 +405,7 @@ void ConsoleUI::deleteVideo() {
     // Check ownership
     auto ids = cp->getUploadedVideoIds();
     bool owns = false;
-    for (const auto& id : ids) if (id == vid) { owns = true; break; }
+    for (const auto& id : ids) if (toLower(id) == toLower(vid)) { owns = true; break; }
 
     if (!owns) {
         std::cout << "  \xE2\x9D\x8C  You don't own video " << vid << ".\n";
@@ -415,7 +416,7 @@ void ConsoleUI::deleteVideo() {
     data.rankingSystem.removeVideo(vid);
     cp->removeUploadedVideo(vid);
     data.videos.erase(std::remove_if(data.videos.begin(), data.videos.end(),
-        [&](const Video& v){ return v.videoId == vid; }), data.videos.end());
+        [&](const Video& v){ return toLower(v.videoId) == toLower(vid); }), data.videos.end());
 
     std::cout << "  \xE2\x9C\x85  Video " << vid << " deleted.\n";
 }

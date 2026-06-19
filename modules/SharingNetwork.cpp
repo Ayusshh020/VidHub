@@ -1,5 +1,6 @@
 // Note: Comments are only for understanding—do not modify the code itself.
 #include "SharingNetwork.h"
+#include "../utils/Helpers.h"
 
 #include <iostream>
 #include <iomanip>
@@ -10,28 +11,33 @@ static void printSNDivider(char c = '-') {
     std::cout << "  " << std::string(62, c) << "\n";
 }
 
-// =============================================================
-//  GRAPH CONSTRUCTION
-// =============================================================
-
 void SharingNetwork::addNode(const std::string& userId) {
     nodes.insert(userId);
-    // Ensure the node has an entry in adjList (even if no edges)
     if (adjList.find(userId) == adjList.end())
         adjList[userId] = {};
+}
+
+std::string SharingNetwork::getExactNodeName(const std::string& name) const {
+    for (const auto& node : nodes) {
+        if (toLower(node) == toLower(name)) {
+            return node;
+        }
+    }
+    return name;
 }
 
 // Record a directed share edge: fromUser → toUser.
 // Both nodes are auto-registered if not present.
 void SharingNetwork::addShare(const std::string& fromUser,
                                const std::string& toUser) {
-    addNode(fromUser);
-    addNode(toUser);
-    // Prevent duplicate edges
-    auto& neighbors = adjList[fromUser];
+    std::string resolvedFrom = getExactNodeName(fromUser);
+    std::string resolvedTo = getExactNodeName(toUser);
+    addNode(resolvedFrom);
+    addNode(resolvedTo);
+    auto& neighbors = adjList[resolvedFrom];
     for (const auto& n : neighbors)
-        if (n == toUser) return;   // Edge already exists
-    neighbors.push_back(toUser);
+        if (n == resolvedTo) return;
+    neighbors.push_back(resolvedTo);
 }
 
 // Performs Breadth-First Search (BFS) starting from the given source node.
@@ -41,17 +47,17 @@ std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     std::unordered_set<std::string> visited;
     std::queue<std::string>         q;
 
-    if (!hasNode(source)) return result;
+    std::string resolvedSource = getExactNodeName(source);
+    if (!hasNode(resolvedSource)) return result;
 
-    q.push(source);
-    visited.insert(source);
+    q.push(resolvedSource);
+    visited.insert(resolvedSource);
 
     while (!q.empty()) {
         std::string current = q.front();
         q.pop();
         result.push_back(current);
 
-        // Enqueue all unvisited neighbours
         auto it = adjList.find(current);
         if (it != adjList.end()) {
             for (const auto& neighbor : it->second) {
@@ -73,10 +79,11 @@ SharingNetwork::BFSLevels(const std::string& source) const {
     std::unordered_set<std::string>       visited;
     std::queue<std::string>               q;
 
-    if (!hasNode(source)) return levels;
+    std::string resolvedSource = getExactNodeName(source);
+    if (!hasNode(resolvedSource)) return levels;
 
-    q.push(source);
-    visited.insert(source);
+    q.push(resolvedSource);
+    visited.insert(resolvedSource);
 
     while (!q.empty()) {
         int levelSize = static_cast<int>(q.size());
@@ -123,8 +130,9 @@ std::vector<std::string> SharingNetwork::DFS(const std::string& source) const {
     std::vector<std::string>        result;
     std::unordered_set<std::string> visited;
 
-    if (!hasNode(source)) return result;
-    dfsHelper(source, visited, result);
+    std::string resolvedSource = getExactNodeName(source);
+    if (!hasNode(resolvedSource)) return result;
+    dfsHelper(resolvedSource, visited, result);
     return result;
 }
 
@@ -149,15 +157,20 @@ int SharingNetwork::getEdgeCount() const {
 }
 
 bool SharingNetwork::hasNode(const std::string& userId) const {
-    return nodes.count(userId) > 0;
+    for (const auto& node : nodes) {
+        if (toLower(node) == toLower(userId)) return true;
+    }
+    return false;
 }
 
 bool SharingNetwork::hasEdge(const std::string& from,
                               const std::string& to) const {
-    auto it = adjList.find(from);
+    std::string resolvedFrom = getExactNodeName(from);
+    std::string resolvedTo = getExactNodeName(to);
+    auto it = adjList.find(resolvedFrom);
     if (it == adjList.end()) return false;
     for (const auto& n : it->second)
-        if (n == to) return true;
+        if (n == resolvedTo) return true;
     return false;
 }
 
@@ -193,10 +206,11 @@ void SharingNetwork::displayNetwork() const {
 void SharingNetwork::displayBFSTraversal(const std::string& source) const {
     std::cout << "\n";
     printSNDivider('=');
-    std::cout << "  \xF0\x9F\x94\x84  BFS from \"" << source << "\"\n";
+    std::string resolvedSource = getExactNodeName(source);
+    std::cout << "  \xF0\x9F\x94\x84  BFS from \"" << resolvedSource << "\"\n";
     printSNDivider('=');
 
-    auto levels = BFSLevels(source);
+    auto levels = BFSLevels(resolvedSource);
     if (levels.empty()) {
         std::cout << "  Node \"" << source << "\" not found.\n";
         printSNDivider('=');
@@ -214,9 +228,9 @@ void SharingNetwork::displayBFSTraversal(const std::string& source) const {
         std::cout << "\n";
     }
 
-    int total = getReachCount(source) - 1;  // Exclude source itself
+    int total = getReachCount(resolvedSource) - 1;
     std::cout << "\n  Total reach: " << total << " user"
-              << (total == 1 ? "" : "s") << " reached from \"" << source << "\"\n";
+              << (total == 1 ? "" : "s") << " reached from \"" << resolvedSource << "\"\n";
     printSNDivider('=');
     std::cout << "\n";
 }
@@ -224,10 +238,11 @@ void SharingNetwork::displayBFSTraversal(const std::string& source) const {
 void SharingNetwork::displayDFSTraversal(const std::string& source) const {
     std::cout << "\n";
     printSNDivider('=');
-    std::cout << "  \xF0\x9F\x94\x8D  DFS from \"" << source << "\"\n";
+    std::string resolvedSource = getExactNodeName(source);
+    std::cout << "  \xF0\x9F\x94\x8D  DFS from \"" << resolvedSource << "\"\n";
     printSNDivider('=');
 
-    auto result = DFS(source);
+    auto result = DFS(resolvedSource);
     if (result.empty()) {
         std::cout << "  Node \"" << source << "\" not found.\n";
     } else {
@@ -243,6 +258,7 @@ void SharingNetwork::displayDFSTraversal(const std::string& source) const {
 }
 
 void SharingNetwork::displayReachAnalysis(const std::string& source) const {
-    displayBFSTraversal(source);
-    displayDFSTraversal(source);
+    std::string resolvedSource = getExactNodeName(source);
+    displayBFSTraversal(resolvedSource);
+    displayDFSTraversal(resolvedSource);
 }

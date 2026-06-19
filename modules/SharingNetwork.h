@@ -47,6 +47,9 @@ private:
                    std::unordered_set<std::string>& visited,
                    std::vector<std::string>& result) const;
 
+    // Helper for case-insensitive node lookup
+    std::string getExactNodeName(const std::string& name) const;
+
 public:
     SharingNetwork() = default;
 
