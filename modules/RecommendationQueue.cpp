@@ -1,12 +1,9 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "RecommendationQueue.h"
 
 #include <iostream>
 #include <iomanip>
 #include <queue>
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
 
 static void printRQDivider() {
     std::cout << "  " << std::string(62, '-') << "\n";
@@ -47,17 +44,7 @@ const Video& RecommendationQueue::front() const {
     return recQueue.front();
 }
 
-// =============================================================
-//  POPULATE
-//
-//  Called by ConsoleUI after a user finishes watching a video.
-//  Scans the provided videoPool and enqueues videos that:
-//    1. Share the same genre as 'currentGenre'
-//    2. Are NOT the video the user just watched (excludeId)
-//
-//  Fills up to maxSize slots. Existing queue contents are
-//  cleared first so the queue stays fresh and relevant.
-// =============================================================
+// Populates queue with up to maxSize videos sharing currentGenre (excluding excludeId).
 
 void RecommendationQueue::populate(const std::string&        currentGenre,
                                    const std::string&        excludeId,

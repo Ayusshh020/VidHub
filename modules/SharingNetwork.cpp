@@ -1,13 +1,10 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "SharingNetwork.h"
 
 #include <iostream>
 #include <iomanip>
 #include <queue>
 #include <unordered_set>
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
 
 static void printSNDivider(char c = '-') {
     std::cout << "  " << std::string(62, c) << "\n";
@@ -37,20 +34,7 @@ void SharingNetwork::addShare(const std::string& fromUser,
     neighbors.push_back(toUser);
 }
 
-// =============================================================
-//  BFS — Breadth-First Search
-//
-//  Uses a queue. Visits all neighbours of a node before going
-//  deeper. Gives shortest path in terms of hop count.
-//
-//  Algorithm:
-//    1. Enqueue source, mark visited.
-//    2. Dequeue front node, record it.
-//    3. Enqueue all unvisited neighbours, mark them visited.
-//    4. Repeat until queue is empty.
-//
-//  Time: O(V + E)   Space: O(V)
-// =============================================================
+// Performs Breadth-First Search (BFS) starting from the given source node.
 
 std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     std::vector<std::string>        result;
@@ -118,19 +102,7 @@ SharingNetwork::BFSLevels(const std::string& source) const {
     return levels;
 }
 
-// =============================================================
-//  DFS — Depth-First Search
-//
-//  Uses recursion (call stack acts as the DFS stack).
-//  Explores as far as possible before backtracking.
-//
-//  Algorithm:
-//    1. Mark current node visited, record it.
-//    2. Recursively visit each unvisited neighbour.
-//    3. Backtrack when no unvisited neighbours remain.
-//
-//  Time: O(V + E)   Space: O(V) recursion depth
-// =============================================================
+// Recursively traverses the network using Depth-First Search (DFS).
 
 void SharingNetwork::dfsHelper(const std::string& node,
                                 std::unordered_set<std::string>& visited,

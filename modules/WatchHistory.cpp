@@ -1,12 +1,9 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "WatchHistory.h"
 
 #include <iostream>
 #include <iomanip>
 #include <stack>
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
 
 static void printWHDivider() {
     std::cout << "  " << std::string(62, '-') << "\n";
@@ -24,18 +21,7 @@ WatchHistory::WatchHistory(int maxSize)
 //  CORE STACK OPERATIONS
 // =============================================================
 
-// Push a video onto the top of the history stack.
-//
-// Overflow handling: std::stack has no built-in size cap.
-// When maxSize is reached we rebuild the stack without the
-// oldest entry (the bottom element).
-//
-// How to drop the bottom of a std::stack:
-//   1. Transfer all elements into a temporary std::stack
-//      (this reverses the order, making bottom → top of temp).
-//   2. Pop once from temp (discards the original bottom).
-//   3. Transfer remaining elements back.
-// This is O(n) but only runs once every maxSize pushes.
+// Pushes a video. If maxSize is reached, removes the oldest (bottom) entry by reversing elements.
 void WatchHistory::push(const Video& video) {
     if (static_cast<int>(history.size()) >= maxSize) {
         // --- Drop the oldest (bottom) entry ---

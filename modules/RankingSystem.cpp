@@ -1,11 +1,8 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "RankingSystem.h"
 
 #include <iostream>
 #include <iomanip>
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
 
 static void printRSDivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
@@ -27,21 +24,7 @@ RankingSystem::RankingSystem()
     : heapDirty(false)
 {}
 
-// =============================================================
-//  PRIVATE: rebuildHeap()
-//
-//  Clears the current heap and rebuilds it from videoStore.
-//  Called automatically before any heap-reading operation when
-//  heapDirty == true.
-//
-//  Why not just keep the heap always in sync?
-//    priority_queue has no update-in-place operation.
-//    If we insert a "new" entry for every score update without
-//    removing the old one, the heap becomes stale.
-//    Rebuild ensures heap always reflects the current store.
-//
-//  Time: O(n log n) — insert each of n videos into heap.
-// =============================================================
+// Rebuilds the priority queue from the video store. Called lazily when heapDirty is true.
 
 void RankingSystem::rebuildHeap() const {
     // Drain existing heap

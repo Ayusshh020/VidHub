@@ -1,13 +1,10 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "VideoCatalog.h"
 
 #include <iostream>
 #include <iomanip>
-#include <algorithm>   // std::transform for toLower
-#include <cctype>      // std::tolower
-
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
+#include <algorithm>
+#include <cctype>
 
 static void printVCDivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
@@ -41,14 +38,7 @@ void VideoCatalog::clearHelper(BSTNode* node) {
     delete node;
 }
 
-// =============================================================
-//  INSERT
-//
-//  BST insert ordered by title (alphabetical).
-//  Duplicates (same videoId) are silently rejected.
-//  Returns the updated subtree root so the recursive call
-//  can wire the pointer correctly.
-// =============================================================
+// BST insert ordered alphabetically by video title. Duplicates are ignored.
 
 VideoCatalog::BSTNode*
 VideoCatalog::insertHelper(BSTNode* node, const Video& video) {
@@ -73,21 +63,7 @@ void VideoCatalog::insert(const Video& video) {
     root = insertHelper(root, video);
 }
 
-// =============================================================
-//  REMOVE
-//
-//  Classic 3-case BST deletion, matched by videoId.
-//  Because the BST is keyed on TITLE, we first do an O(n)
-//  traversal to find the node, then apply standard deletion.
-//
-//  The 3 cases:
-//    Case 1 — Leaf node        : simply delete
-//    Case 2 — One child        : replace node with its child
-//    Case 3 — Two children     : find in-order successor
-//                                (min of right subtree),
-//                                copy its data here, then
-//                                delete the successor node
-// =============================================================
+// BST deletion matched by videoId. Requires O(n) traversal since BST is keyed by title.
 
 // Find the leftmost (minimum-title) node in a subtree.
 // Used to locate the in-order successor during deletion.
@@ -155,12 +131,7 @@ bool VideoCatalog::remove(const std::string& videoId) {
     return nodeCount < before;   // true if a node was actually removed
 }
 
-// =============================================================
-//  SEARCH OPERATIONS
-// =============================================================
-
-// Exact title match — uses BST ordering property for O(log n).
-// Returns pointer to internal node's Video, or nullptr.
+// Exact title match search using BST ordering (O(log n)).
 VideoCatalog::BSTNode*
 VideoCatalog::searchByTitle(BSTNode* node, const std::string& title) const {
     if (node == nullptr)              return nullptr;

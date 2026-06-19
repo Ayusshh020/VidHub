@@ -1,3 +1,4 @@
+// Note: Comments are only for understanding—do not modify the code itself.
 #include "DeliveryOptimizer.h"
 
 #include <iostream>
@@ -6,17 +7,9 @@
 #include <vector>
 #include <algorithm>
 
-// ─────────────────────────────────────────────────────────────
-//  File-local helpers
-// ─────────────────────────────────────────────────────────────
-
 static void printDODivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
 }
-
-// =============================================================
-//  CONSTRUCTOR
-// =============================================================
 
 DeliveryOptimizer::DeliveryOptimizer(int nodeCount)
     : V(nodeCount), adjList(nodeCount)
@@ -30,14 +23,12 @@ void DeliveryOptimizer::setNodeName(int nodeId, const std::string& name) {
     nodeNames[nodeId] = name;
 }
 
-// Add undirected edge: both u→v and v→u with the same cost
 void DeliveryOptimizer::addEdge(int u, int v, int costMs) {
     adjList[u].push_back({v, costMs});
     adjList[v].push_back({u, costMs});
 }
 
-// Update cost of edge u↔v in both directions.
-// If edge doesn't exist, adds it.
+// Updates/inserts edge cost for bidirectional edge.
 void DeliveryOptimizer::updateEdgeCost(int u, int v, int newCostMs) {
     bool updated = false;
     for (auto& edge : adjList[u]) {
@@ -46,40 +37,16 @@ void DeliveryOptimizer::updateEdgeCost(int u, int v, int newCostMs) {
     for (auto& edge : adjList[v]) {
         if (edge.first == u) { edge.second = newCostMs; break; }
     }
-    if (!updated) addEdge(u, v, newCostMs);  // Add if not found
+    if (!updated) addEdge(u, v, newCostMs);
 }
 
-// =============================================================
-//  DIJKSTRA'S ALGORITHM
-//
-//  Greedy shortest-path algorithm using a min-heap.
-//
-//  Data structures:
-//    dist[]  : shortest known distance from src to each node
-//    prev[]  : previous node on the shortest path (for reconstruction)
-//    pq      : min-heap of {cost, nodeId} — always pops cheapest
-//
-//  Steps:
-//    1. Initialize dist[src] = 0, all others = INF.
-//    2. Push {0, src} into the min-heap.
-//    3. Pop the node with the smallest current distance.
-//    4. For each neighbour v of current node u:
-//         If dist[u] + edge(u,v) < dist[v]:
-//             Update dist[v] and prev[v].
-//             Push {dist[v], v} into the heap.
-//    5. Repeat until heap is empty or dest is reached.
-//    6. Reconstruct path using prev[].
-//
-//  Time: O((V + E) log V)
-// =============================================================
-
+// Finds the shortest path between src and dest using Dijkstra's algorithm.
 std::pair<int, std::vector<int>>
 DeliveryOptimizer::dijkstra(int src, int dest) const {
     std::vector<int> dist(V, INF);
     std::vector<int> prev(V, -1);
 
-    // Min-heap: {cost, nodeId}
-    // priority_queue is max-heap by default → negate or use greater<>
+    // Min-heap storing {cost, nodeId}
     using pii = std::pair<int, int>;
     std::priority_queue<pii, std::vector<pii>, std::greater<pii>> pq;
 
@@ -92,13 +59,9 @@ DeliveryOptimizer::dijkstra(int src, int dest) const {
         int u = topNode.second;
         pq.pop();
 
-        // Skip stale entries (a shorter path was already found)
         if (currentCost > dist[u]) continue;
-
-        // Early exit — we've settled the destination
         if (u == dest) break;
 
-        // Relax all edges from u
         for (const auto& edge : adjList[u]) {
             int v = edge.first;
             int edgeCost = edge.second;
@@ -111,16 +74,13 @@ DeliveryOptimizer::dijkstra(int src, int dest) const {
         }
     }
 
-    // No path found
     if (dist[dest] == INF)
         return {-1, {}};
 
-    // Reconstruct path: trace back from dest using prev[]
-    std::vector<int> path = reconstructPath(prev, src, dest);
-    return {dist[dest], path};
+    return {dist[dest], reconstructPath(prev, src, dest)};
 }
 
-// Trace back from dest to src using prev[], then reverse.
+// Reconstructs the shortest path from destination back to source.
 std::vector<int>
 DeliveryOptimizer::reconstructPath(const std::vector<int>& prev,
                                     int src, int dest) const {
@@ -129,7 +89,6 @@ DeliveryOptimizer::reconstructPath(const std::vector<int>& prev,
         path.push_back(at);
     std::reverse(path.begin(), path.end());
 
-    // Verify path starts at src (sanity check)
     if (path.front() != src) return {};
     return path;
 }
