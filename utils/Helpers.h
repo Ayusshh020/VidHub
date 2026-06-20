@@ -1,4 +1,3 @@
-// Note: Comments are only for understanding—do not modify the code itself.
 #ifndef HELPERS_H
 #define HELPERS_H
 

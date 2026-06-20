@@ -1,4 +1,3 @@
-// Note: Comments are only for understanding—do not modify the code itself.
 #include "DummyData.h"
 
 DummyData::DummyData()

@@ -1,4 +1,3 @@
-// Note: Comments are only for understanding—do not modify the code itself.
 #include "Admin.h"
 
 #include <iostream>

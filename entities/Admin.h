@@ -1,5 +1,4 @@
 #pragma once
-// Note: Comments are only for understanding—do not modify the code itself.
 
 #include "User.h"
 #include <string>

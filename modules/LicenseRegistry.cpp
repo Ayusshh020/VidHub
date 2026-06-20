@@ -1,4 +1,3 @@
-// Note: Comments are only for understanding—do not modify the code itself.
 #include "LicenseRegistry.h"
 #include "../utils/Helpers.h"
 
