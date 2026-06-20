@@ -42,6 +42,7 @@ private:
     void showWatchHistory();
     void showRecommendations();
     void playNextRecommendation();
+    void shareVideo();
 
     void showCreatorDashboard();
     void uploadVideo();

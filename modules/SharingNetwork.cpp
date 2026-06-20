@@ -22,6 +22,11 @@ std::string SharingNetwork::getExactNodeName(const std::string& name) const {
             return node;
         }
     }
+    for (const auto& node : nodes) {
+        if (toLower(node).find(toLower(name)) != std::string::npos) {
+            return node;
+        }
+    }
     return name;
 }
 

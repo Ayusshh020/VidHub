@@ -167,10 +167,11 @@ void ConsoleUI::viewerMenu() {
         std::cout << "  [5] Watch History\n";
         std::cout << "  [6] Recommended — Up Next\n";
         std::cout << "  [7] Play Next Recommendation\n";
-        std::cout << "  [8] Switch Session\n";
+        std::cout << "  [8] Share a Video\n";
+        std::cout << "  [9] Switch Session\n";
         std::cout << "  [0] Exit VidHub\n\n";
 
-        int choice = getIntInput("  > ", 0, 8);
+        int choice = getIntInput("  > ", 0, 9);
         switch (choice) {
             case 1: showHomeFeed();             break;
             case 2: browseAllVideos();          break;
@@ -179,7 +180,8 @@ void ConsoleUI::viewerMenu() {
             case 5: showWatchHistory();         break;
             case 6: showRecommendations();      break;
             case 7: playNextRecommendation();   break;
-            case 8: selectSession(); return;
+            case 8: shareVideo();               break;
+            case 9: selectSession(); return;
             case 0: std::cout << "\n  Goodbye!\n\n"; exit(0);
         }
     }
@@ -195,10 +197,11 @@ void ConsoleUI::creatorMenu() {
         std::cout << "  [5] Browse Catalog (A-Z)\n";
         std::cout << "  [6] Watch a Video\n";
         std::cout << "  [7] Watch History\n";
-        std::cout << "  [8] Switch Session\n";
+        std::cout << "  [8] Share a Video\n";
+        std::cout << "  [9] Switch Session\n";
         std::cout << "  [0] Exit VidHub\n\n";
 
-        int choice = getIntInput("  > ", 0, 8);
+        int choice = getIntInput("  > ", 0, 9);
         switch (choice) {
             case 1: showCreatorDashboard(); break;
             case 2: uploadVideo();          break;
@@ -207,7 +210,8 @@ void ConsoleUI::creatorMenu() {
             case 5: browseAllVideos();      break;
             case 6: watchFromCatalog();     break;
             case 7: showWatchHistory();     break;
-            case 8: selectSession(); return;
+            case 8: shareVideo();           break;
+            case 9: selectSession(); return;
             case 0: std::cout << "\n  Goodbye!\n\n"; exit(0);
         }
     }
@@ -293,6 +297,31 @@ void ConsoleUI::playNextRecommendation() {
     }
     Video next = activeRecommendations.dequeue();
     watchVideo(next.videoId);
+}
+
+void ConsoleUI::shareVideo() {
+    printSectionHeader("  \xF0\x9F\x93\xA3  Share a Video");
+
+    std::string senderName = "Anonymous";
+    if (activeRole == "viewer") {
+        User* u = findUser(activeUserId);
+        if (u) senderName = u->getName();
+    } else if (activeRole == "creator") {
+        Creator* c = findCreator(activeUserId);
+        if (c) senderName = c->getChannelName();
+    } else if (activeRole == "admin") {
+        senderName = data.admin.getName();
+    }
+
+    std::cout << "  Sharing as: " << senderName << "\n";
+    std::string recipient = getStringInput("  Enter recipient's name or platform: ");
+    if (recipient.empty()) {
+        std::cout << "  \xE2\x9D\x8C  Recipient name cannot be empty.\n";
+        return;
+    }
+
+    data.sharingNetwork.addShare(senderName, recipient);
+    std::cout << "\n  \xE2\x9C\x85  Shared successfully from \"" << senderName << "\" to \"" << recipient << "\"!\n";
 }
 
 void ConsoleUI::showCreatorDashboard() {
