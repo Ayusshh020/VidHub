@@ -1,0 +1,88 @@
+
+================================================
+  VidHub — Step 7: LicenseRegistry Test
+================================================
+
+[PASS] Empty registry on construction
+[PASS] registerLicense() — 5 licenses added
+[PASS] Duplicate key rejected (count still 5)
+[PASS] verify() returns true for 3 active licenses
+[PASS] verify() returns false for unknown keys
+[PASS] revokeLicense() — CC-EDU-001 revoked (entry preserved)
+[PASS] verify() returns false for revoked license
+[PASS] exists()=true but verify()=false for revoked key
+[PASS] getInfo() retrieved correct LicenseInfo
+[PASS] removeLicense() — PROP-WG-006 hard-deleted
+[PASS] revokeLicense() returns false for unknown key
+
+--- displayAll() ---
+  ==============================================================
+  🔒  License Registry  (4 total, 3 active)
+  ==============================================================
+  --------------------------------------------------------------
+  Key       : CC-HLTH-004
+  Owner     : YogaLife  (USR-011)
+  Type      : CC
+  Expiry    : 2025-08-15
+  Status    : ✔ ACTIVE
+  --------------------------------------------------------------
+  Key       : CC-EDU-001
+  Owner     : CodeBase  (USR-010)
+  Type      : CC
+  Expiry    : 2025-12-31
+  Status    : ✘ REVOKED
+  --------------------------------------------------------------
+  Key       : MIT-AJ-003
+  Owner     : Arjun Dev  (USR-003)
+  Type      : MIT
+  Expiry    : 2026-06-01
+  Status    : ✔ ACTIVE
+  --------------------------------------------------------------
+  Key       : MIT-AJ-002
+  Owner     : Arjun Dev  (USR-003)
+  Type      : MIT
+  Expiry    : 2026-06-01
+  Status    : ✔ ACTIVE
+  ==============================================================
+
+--- displayActive() ---
+  ==============================================================
+  ✔  Active Licenses  (3)
+  ==============================================================
+  --------------------------------------------------------------
+  Key       : CC-HLTH-004
+  Owner     : YogaLife  (USR-011)
+  Type      : CC
+  Expiry    : 2025-08-15
+  Status    : ✔ ACTIVE
+  --------------------------------------------------------------
+  Key       : MIT-AJ-003
+  Owner     : Arjun Dev  (USR-003)
+  Type      : MIT
+  Expiry    : 2026-06-01
+  Status    : ✔ ACTIVE
+  --------------------------------------------------------------
+  Key       : MIT-AJ-002
+  Owner     : Arjun Dev  (USR-003)
+  Type      : MIT
+  Expiry    : 2026-06-01
+  Status    : ✔ ACTIVE
+  ==============================================================
+
+--- displayRevoked() ---
+  ==============================================================
+  ✘  Revoked Licenses
+  ==============================================================
+  --------------------------------------------------------------
+  Key       : CC-EDU-001
+  Owner     : CodeBase  (USR-010)
+  Type      : CC
+  Expiry    : 2025-12-31
+  Status    : ✘ REVOKED
+  ==============================================================
+
+
+================================================
+  All LicenseRegistry tests passed!
+================================================
+

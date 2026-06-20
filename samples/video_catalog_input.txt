@@ -1,0 +1,38 @@
+# Simulated Input Data for Video Catalog (BST) Test
+
+The video catalog tests simulate insertion, search (exact title, keyword, genre), contains verification, and leaf/single-child/two-child node deletions in a Binary Search Tree (BST) sorted alphabetically by title.
+
+## 1. Initial Insertions (Simulated in specific order to build the BST)
+
+| Video ID | Title | Genre | Engagement Score | Creator ID |
+| :--- | :--- | :--- | :--- | :--- |
+| VID-002 | Python OOP Crash Course | Education | 2940.0 | USR-003 |
+| VID-004 | Morning Yoga Routine | Health | 4310.0 | USR-003 |
+| VID-003 | Build a REST API | Tech | 4820.0 | USR-003 |
+| VID-006 | JavaScript Basics | Education | 1850.0 | USR-003 |
+| VID-008 | Vegan Cooking 101 | Lifestyle | 1430.0 | USR-003 |
+| VID-001 | Python for Beginners | Education | 3200.0 | USR-003 |
+| VID-005 | Top 10 Travel Hacks | Travel | 3890.0 | USR-003 |
+
+## 2. Additional Insertions (Used for Deletion Case Studies)
+
+| Video ID | Title | Genre | Creator ID |
+| :--- | :--- | :--- | :--- |
+| VID-009 | Zumba for Beginners | Health | USR-003 |
+| VID-010 | Zumba Advanced | Health | USR-003 |
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize empty BST Video Catalog.
+2. Insert the 7 initial videos (BST sorting is tested by retrieving them via in-order traversal).
+3. Attempt duplicate insertion of `VID-002` (expected: ignored).
+4. Perform exact title search for `"Build a REST API"` and `"Nonexistent Video"`.
+5. Perform case-insensitive keyword search for `"python"` and `"xyz999"`.
+6. Perform genre search for `"Education"` and `"Travel"`.
+7. Verify containment of `VID-003` (true) and `VID-999` (false).
+8. Remove leaf node: `VID-008` ("Vegan Cooking 101").
+9. Insert `VID-009` ("Zumba for Beginners") and `VID-010` ("Zumba Advanced").
+10. Remove one-child node: `VID-009`.
+11. Remove two-children node: `VID-005` ("Top 10 Travel Hacks").
+12. Attempt to remove nonexistent video: `VID-999`.
+13. Call `displayAll()` and `displaySearchResults()` for keyword `"python"`.

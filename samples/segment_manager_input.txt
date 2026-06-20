@@ -1,0 +1,35 @@
+# Simulated Input Data for Video Segment Manager (Deque) Test
+
+The video segment manager tests simulate segmenting videos into buffered chunks and performing buffer operations (seeking, prepending for repair, appending live feeds, and playback consumption) using a double-ended queue (Deque).
+
+## 1. Test Configurations
+
+* **Video 1**: Video ID = `VID-002`, Total Duration = `2700s` (45 min)
+* **Video 2**: Video ID = `VID-004`, Total Duration = `1210s` (20 min 10 sec)
+* **Video 3**: Video ID = `VID-005`, Total Duration = `1215s` (20 min 15 sec)
+
+## 2. Simulated Chunks & Parameters
+
+| Quality | Bitrate (bps) | Calculated Size per Sec |
+| :--- | :--- | :--- |
+| 1080p | 4,000,000 | 488 KB/s |
+| 720p | 2,500,000 | 305 KB/s |
+| 480p | 1,000,000 | 122 KB/s |
+| 360p | 500,000 | 61 KB/s |
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize Video Segment Manager for `VID-002` (2700 seconds).
+2. Segment `VID-002` into `10s` intervals at `720p` quality.
+3. Fetch first segment (index 0) and last segment (index 269).
+4. Initialize manager for `VID-005` (1215 seconds) and segment into `10s` intervals at `480p` quality (verifies partial/remainder segment handling: 122nd segment is 5 seconds long).
+5. Seek to index 119 (O(1) access to minute 20) in `VID-002`'s segments.
+6. Call `peekFront()` to inspect the first segment without consuming it.
+7. Call `consumeFront()` twice (simulating playback of SEG-001 and SEG-002, removing them from the front of the deque).
+8. Append `SEG-271` (index=271, start=2700, end=2710, quality="720p", size=3052 KB) to the back of the deque (simulating live streaming).
+9. Prepend `SEG-0` (index=0, start=0, end=5, quality="480p", size=610 KB) to the front of the deque (simulating a priority repair chunk).
+10. Call `displaySegments()` (displays first 5 and last 3 chunks).
+11. Call `displaySegmentRange(1, 5)`.
+12. Display playback progress bars for current indices 90 and 270.
+13. Re-segment the video into `30s` intervals at `1080p` quality (clears the previous deque buffer).
+14. Call `clear()` to empty the manager buffer.

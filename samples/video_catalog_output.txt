@@ -1,0 +1,46 @@
+
+=============================================
+  VidHub — Step 8: VideoCatalog (BST) Test
+=============================================
+
+[PASS] Empty catalog on construction
+[PASS] insert() — 7 videos added
+[PASS] getAllSorted() — in-order traversal is alphabetical
+[PASS] Duplicate videoId silently rejected
+[PASS] searchExact() found 'Build a REST API' → VID-003
+[PASS] searchExact() returns nullptr for missing title
+[PASS] searchByKeyword('python') — found 2 results
+[PASS] searchByKeyword('xyz999') — 0 results
+[PASS] searchByGenre('Education') — found 3 videos
+[PASS] searchByGenre('Travel') — found 1 video
+[PASS] contains() — VID-003 found, VID-999 not found
+[PASS] remove() leaf node — VID-008 deleted (count=6)
+[PASS] remove() one-child node — child correctly promoted
+[PASS] remove() two-children node — in-order successor used
+[PASS] remove() returns false for unknown videoId
+
+--- displayAll() after operations ---
+  ==================================================================
+  📼  Video Catalog  (6 videos | alphabetical order)
+  ==================================================================
+    1. Build a REST API                     [VID-003]  Tech          Score: 4820.0
+    2. JavaScript Basics                    [VID-006]  Education     Score: 1850.0
+    3. Morning Yoga Routine                 [VID-004]  Health        Score: 4310.0
+    4. Python OOP Crash Course              [VID-002]  Education     Score: 2940.0
+    5. Python for Beginners                 [VID-001]  Education     Score: 3200.0
+    6. Zumba Advanced                       [VID-010]  Health        Score: 0.0
+  ==================================================================
+
+--- displaySearchResults() for 'python' ---
+  ------------------------------------------------------------------
+  🔍  Search: "python"  (2 results)
+  ------------------------------------------------------------------
+   1. Python OOP Crash Course              [VID-002]  Genre: Education
+   2. Python for Beginners                 [VID-001]  Genre: Education
+  ------------------------------------------------------------------
+
+
+=============================================
+  All VideoCatalog (BST) tests passed!
+=============================================
+

@@ -1,0 +1,66 @@
+
+===============================================
+  VidHub — Step 12: DeliveryOptimizer Test
+===============================================
+
+[PASS] Node names assigned correctly
+[PASS] dijkstra(Mumbai→User) = 28ms via Bangalore+Singapore
+[PASS] dijkstra(Mumbai→Mumbai) = 0ms (same node)
+[PASS] dijkstra(Delhi→User) = 25ms via Singapore
+[PASS] Dijkstra picks cost-optimal, not just fewest hops
+[PASS] dijkstra returns -1 for unreachable node
+[PASS] After congestion on Bangalore, rerouted via Delhi (35ms)
+[PASS] After restoring Bangalore, optimal route returns to 28ms
+
+--- displayGraph() ---
+  ==================================================================
+  🌐  CDN Network Graph  (6 nodes)
+  ==================================================================
+  Mumbai-Origin        →  Delhi-PoP [10ms], Bangalore-PoP [8ms]
+  Delhi-PoP            →  Mumbai-Origin [10ms], Singapore-Edge [20ms], London-Edge [25ms]
+  Bangalore-PoP        →  Mumbai-Origin [8ms], Singapore-Edge [15ms]
+  Singapore-Edge       →  Delhi-PoP [20ms], Bangalore-PoP [15ms], User-Local [5ms]
+  London-Edge          →  Delhi-PoP [25ms], User-Local [30ms]
+  User-Local           →  Singapore-Edge [5ms], London-Edge [30ms]
+  ==================================================================
+
+--- displayRoute(Mumbai → User) ---
+  ==================================================================
+  🚀  Optimal Delivery Route
+  From : Mumbai-Origin
+  To   : User-Local
+  ==================================================================
+  Route: Mumbai-Origin → Bangalore-PoP → Singapore-Edge → User-Local
+  Hops : 3
+  Cost : 28 ms  ✔ Optimal
+  ==================================================================
+
+--- displayRoute(after congestion on Bangalore) ---
+  ==================================================================
+  🚀  Optimal Delivery Route
+  From : Mumbai-Origin
+  To   : User-Local
+  ==================================================================
+  Route: Mumbai-Origin → Delhi-PoP → Singapore-Edge → User-Local
+  Hops : 3
+  Cost : 35 ms  ✔ Optimal
+  ==================================================================
+
+--- displayAllRoutes(from Mumbai) ---
+  ==================================================================
+  🛣  All Routes from: Mumbai-Origin
+  ==================================================================
+  Destination           Cost      Path
+  ------------------------------------------------------------------
+  Delhi-PoP             10      ms  Mumbai-Origin→Delhi-PoP
+  Bangalore-PoP         8       ms  Mumbai-Origin→Bangalore-PoP
+  Singapore-Edge        23      ms  Mumbai-Origin→Bangalore-PoP→Singapore-Edge
+  London-Edge           35      ms  Mumbai-Origin→Delhi-PoP→London-Edge
+  User-Local            28      ms  Mumbai-Origin→Bangalore-PoP→Singapore-Edge→User-Local
+  ==================================================================
+
+
+===============================================
+  All DeliveryOptimizer tests passed!
+===============================================
+

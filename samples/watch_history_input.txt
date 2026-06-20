@@ -1,0 +1,36 @@
+# Simulated Input Data for Watch History (Stack) Test
+
+The watch history module tests simulate user actions by pushing and popping videos on a Stack data structure (Last In, First Out). The following represents the input data and parameters used during the test execution.
+
+## 1. Test Videos
+
+| Video ID | Title | Genre | Duration (sec) | Views | License |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| VID-001 | Python for Beginners | Education | 1800 | 22,400 | LIC-001 |
+| VID-002 | Python OOP Crash Course | Education | 1800 | 18,100 | LIC-001 |
+| VID-003 | Build a REST API | Education | 1800 | 45,200 | LIC-001 |
+
+## 2. Overflow Test Case (Capped Stack of Size 3)
+
+| Video ID | Title | Genre | Duration (sec) | Views | License |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| VID-A | Video A | Education | 1800 | 0 | LIC-001 |
+| VID-B | Video B | Education | 1800 | 0 | LIC-001 |
+| VID-C | Video C | Education | 1800 | 0 | LIC-001 |
+| VID-D | Video D | Education | 1800 | 0 | LIC-001 |
+
+## 3. Simulated Operations Sequence
+
+1. Initialize Watch History Stack (default capacity: 50).
+2. Push `VID-001`.
+3. Push `VID-002`.
+4. Push `VID-003`.
+5. Display history.
+6. Pop from stack (removes most recent).
+7. Push `VID-003` back and clear the stack.
+8. Initialize capped Watch History Stack (capacity: 3).
+9. Push `VID-A`.
+10. Push `VID-B`.
+11. Push `VID-C`.
+12. Push `VID-D` (triggers eviction of the oldest video `VID-A` because the stack is full).
+13. Display capped history.

@@ -1,0 +1,44 @@
+
+================================================
+  VidHub — Step 6: RecommendationQueue Test
+================================================
+
+[PASS] Fresh queue is empty
+[PASS] enqueue(v1) — front is VID-001
+[PASS] enqueue(v2, v3) — front still VID-001 (FIFO preserved)
+[PASS] dequeue() returned VID-001 (FIFO order confirmed)
+[PASS] dequeue() returned VID-002
+
+--- display() — expected order: VID-003, VID-001, VID-002 ---
+  --------------------------------------------------------------
+  🎯  Up Next — Recommended Queue  (3 videos)
+  --------------------------------------------------------------
+   1. Build a REST API                    [VID-003]  Genre: Tech
+   2. Python for Beginners                [VID-001]  Genre: Education
+   3. Python OOP Crash Course             [VID-002]  Genre: Education
+  --------------------------------------------------------------
+
+[PASS] display() did not modify the queue
+[PASS] clear() — queue is empty
+
+--- display() on empty queue ---
+  No recommendations in queue.
+
+[PASS] maxSize=3 cap — 4th enqueue ignored
+[PASS] populate() found 3 Education videos (excludes VID-102)
+
+--- Populated queue (genre=Education, exclude=VID-102) ---
+  --------------------------------------------------------------
+  🎯  Up Next — Recommended Queue  (3 videos)
+  --------------------------------------------------------------
+   1. Python for Beginners                [VID-101]  Genre: Education
+   2. Python Django Full Course           [VID-104]  Genre: Education
+   3. JavaScript Basics                   [VID-106]  Genre: Education
+  --------------------------------------------------------------
+
+[PASS] populate() cleared old entries and refilled with Health videos
+
+================================================
+  All RecommendationQueue tests passed!
+================================================
+

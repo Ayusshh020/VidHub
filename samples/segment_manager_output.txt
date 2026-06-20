@@ -1,0 +1,57 @@
+
+===================================================
+  VidHub — Step 10: VideoSegmentManager (Deque)
+===================================================
+
+[PASS] Default construction — empty deque
+[PASS] segmentVideo(10s) — 270 segments, 2700s total
+[PASS] First segment: SEG-001 | 00:00 → 00:10 | 720p
+[PASS] Last segment:  SEG-270 | 44:50 → 45:00 | 720p
+[PASS] Uneven division — last segment is 5s (1215s ÷ 10s)
+[PASS] getSegment(119) — seek to 19:50→20:00 ✓
+[PASS] peekFront() — SEG-001 visible, deque unchanged
+[PASS] consumeFront() — played SEG-001, SEG-002, 268 remain
+[PASS] appendSegment() — live SEG-271 added to back
+[PASS] prependSegment() — repair SEG-0 added to front
+
+--- displaySegments() [270 segs — shows first5 + last3] ---
+  ==================================================================
+  📹  Segments for [VID-002]  (270 segments | 2695s total)
+  ==================================================================
+  SEG-000 | 00:00 → 00:05 |  480p |    610 KB
+  SEG-003 | 00:20 → 00:30 |  720p |   3050 KB
+  SEG-004 | 00:30 → 00:40 |  720p |   3050 KB
+  SEG-005 | 00:40 → 00:50 |  720p |   3050 KB
+  SEG-006 | 00:50 → 01:00 |  720p |   3050 KB
+  ... (262 segments) ...
+  SEG-269 | 44:40 → 44:50 |  720p |   3050 KB
+  SEG-270 | 44:50 → 45:00 |  720p |   3050 KB
+  SEG-271 | 45:00 → 45:10 |  720p |   3052 KB
+  ==================================================================
+
+--- displaySegmentRange(1, 5) ---
+  ------------------------------------------------------------------
+  Segments 1 to 5:
+  ------------------------------------------------------------------
+  SEG-000 | 00:00 → 00:05 |  480p |    610 KB
+  SEG-003 | 00:20 → 00:30 |  720p |   3050 KB
+  SEG-004 | 00:30 → 00:40 |  720p |   3050 KB
+  SEG-005 | 00:40 → 00:50 |  720p |   3050 KB
+  SEG-006 | 00:50 → 01:00 |  720p |   3050 KB
+  ------------------------------------------------------------------
+
+--- Playback status at segment 90/270 ---
+  ▶  Playback Progress:
+  [█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33%  Segment 90/270  |  Next: 15:10
+
+--- Playback status at segment 270/270 ---
+  ▶  Playback Progress:
+  [████████████████████████████████████████] 100%  Segment 270/270
+
+[PASS] Re-segmentation clears old segments (90 @ 1080p)
+[PASS] clear() empties the deque
+
+===================================================
+  All VideoSegmentManager tests passed!
+===================================================
+

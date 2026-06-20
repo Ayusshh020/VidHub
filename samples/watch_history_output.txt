@@ -1,0 +1,40 @@
+
+==============================================
+  VidHub — Step 5: WatchHistory (Stack) Test
+==============================================
+
+[PASS] Fresh stack is empty
+[PASS] push(v1) + peek() → VID-001
+[PASS] push(v2, v3) — top is now VID-003 (most recent)
+
+--- display() — expected order: VID-003, VID-002, VID-001 ---
+  --------------------------------------------------------------
+  📋  Watch History  (3 videos | most recent first)
+  --------------------------------------------------------------
+   1. Build a REST API                    [VID-003]  Views: 45200
+   2. Python OOP Crash Course             [VID-002]  Views: 18100
+   3. Python for Beginners                [VID-001]  Views: 22400
+  --------------------------------------------------------------
+
+[PASS] pop() returned VID-003, new top is VID-002
+[PASS] clear() — stack is empty
+
+--- display() on empty stack ---
+  Your watch history is empty.
+
+[PASS] maxSize=3 cap — VID-D on top, VID-A evicted
+
+--- Capped history (3 entries) after overflow ---
+  --------------------------------------------------------------
+  📋  Watch History  (3 videos | most recent first)
+  --------------------------------------------------------------
+   1. Video D                             [VID-D]  Views: 0
+   2. Video C                             [VID-C]  Views: 0
+   3. Video B                             [VID-B]  Views: 0
+  --------------------------------------------------------------
+
+
+==============================================
+  All WatchHistory tests passed!
+==============================================
+

@@ -1,0 +1,39 @@
+
+================================================
+  VidHub — Step 9: RankingSystem (Heap) Test
+================================================
+
+[PASS] Empty ranking system on construction
+[PASS] addVideo() — 6 videos added
+  Top video: Morning Yoga Routine (score=56400)
+[PASS] peekTop() returns the highest-scored video
+[PASS] getTopK(3) returns 3 videos in descending score order
+  Rank 1: Morning Yoga Routine (56400)
+  Rank 2: Top 10 Travel Hacks (54550)
+  Rank 3: Build a REST API (53911.1)
+[PASS] getTopK() does not mutate the internal heap
+[PASS] getTopK(100) returns all 6 videos when k > count
+
+  Updating VID-001 score to: 850000
+[PASS] updateVideo() — VID-001 now at top after score update
+[PASS] updateVideo() returns false for unknown videoId
+[PASS] removeVideo() — VID-006 removed (count=5)
+[PASS] removeVideo() returns false for unknown videoId
+[PASS] contains() works correctly
+
+--- displayRankings(top 5) ---
+  ==================================================================
+  🏆  VidHub Rankings — Top 5  (5 total videos)
+  ==================================================================
+  🥇  1. Python for Beginners                 | Score: 850000.0  | Views: 500000  | Likes: 50000
+  🥈  2. Morning Yoga Routine                 | Score:  56400.0  | Views:  38100  | Likes: 2800
+  🥉  3. Top 10 Travel Hacks                  | Score:  54550.0  | Views:  31500  | Likes: 1900
+      4. Build a REST API                     | Score:  53911.1  | Views:  45200  | Likes: 3100
+      5. Python OOP Crash Course              | Score:  18593.7  | Views:  18100  | Likes: 1420
+  ==================================================================
+
+
+================================================
+  All RankingSystem (Heap) tests passed!
+================================================
+

@@ -1,0 +1,35 @@
+# Simulated Input Data for Ranking System (Max Heap) Test
+
+The ranking system tests simulate enqueuing videos to a Max Heap priority queue, prioritizing them based on their dynamically calculated popularity/engagement score.
+
+## 1. Initial Videos Added
+
+| Video ID | Title | Genre | Views | Likes | Watch Time (s) | Duration (s) | Calculated Score |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| VID-001 | Python for Beginners | Education | 22,400 | 1,800 | 22,400 | 2,400 | ~24,133 |
+| VID-002 | Python OOP Crash Course | Education | 18,100 | 1,420 | 18,100 | 2,700 | ~18,593 |
+| VID-003 | Build a REST API | Education | 45,200 | 3,100 | 45,200 | 1,800 | ~53,911 |
+| VID-004 | Morning Yoga Routine | Education | 38,100 | 2,800 | 38,100 | 1,200 | ~56,400 |
+| VID-005 | Top 10 Travel Hacks | Education | 31,500 | 1,900 | 31,500 | 900 | ~54,550 |
+| VID-006 | JavaScript Basics | Education | 12,000 | 980 | 12,000 | 3,000 | ~11,960 |
+
+## 2. Updated Video Case (Simulating "Going Viral")
+
+| Video ID | Title | Views | Likes | Watch Time (s) | Duration (s) | New Calculated Score |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| VID-001 | Python for Beginners | 500,000 | 50,000 | 1,200,000 | 2,400 | 850,000.0 |
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize empty Ranking System.
+2. Add the 6 initial videos.
+3. Call `peekTop()` (expected: `VID-004` since its score ~56,400 is the highest).
+4. Call `getTopK(3)` to fetch the top 3 ranked videos.
+5. Call `getTopK(100)` to verify bound handling.
+6. Update `VID-001` with the "going viral" stats (expected: `VID-001` rises to the top of the heap).
+7. Call `peekTop()` to confirm `VID-001` is now on top.
+8. Attempt to update a nonexistent video `VID-999` (expected: false).
+9. Remove `VID-006` from the ranking system.
+10. Attempt to remove nonexistent video `VID-999` (expected: false).
+11. Verify containment of `VID-001` (true) and `VID-999` (false).
+12. Call `displayRankings(5)` to show the top 5 videos.

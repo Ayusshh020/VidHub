@@ -1,0 +1,44 @@
+# Simulated Input Data for CDN Delivery Optimizer (Weighted Graph) Test
+
+The CDN delivery optimizer tests model media distribution networks, verifying node routing, shortest latency cost, congestion rerouting, and all-destination paths using a Weighted Graph and Dijkstra's algorithm.
+
+## 1. CDN Network Topology & Nodes
+
+| Node ID | Node Name | Role |
+| :--- | :--- | :--- |
+| 0 | Mumbai-Origin | Origin Server |
+| 1 | Delhi-PoP | Regional Point of Presence |
+| 2 | Bangalore-PoP | Regional Point of Presence |
+| 3 | Singapore-Edge | Edge Server |
+| 4 | London-Edge | Edge Server |
+| 5 | User-Local | Client / Consumer Node |
+
+## 2. Initial Network Edges (Latency Costs in milliseconds)
+
+| Node A | Node B | Edge Direction | Latency Cost (ms) |
+| :--- | :--- | :--- | :--- |
+| 0 (Mumbai) | 1 (Delhi) | Bidirectional | 10 |
+| 0 (Mumbai) | 2 (Bangalore) | Bidirectional | 8 |
+| 1 (Delhi) | 3 (Singapore) | Bidirectional | 20 |
+| 2 (Bangalore) | 3 (Singapore) | Bidirectional | 15 |
+| 3 (Singapore) | 5 (User) | Bidirectional | 5 |
+| 1 (Delhi) | 4 (London) | Bidirectional | 25 |
+| 4 (London) | 5 (User) | Bidirectional | 30 |
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize a 6-node Weighted Graph CDN.
+2. Add the 7 initial network edges listed above.
+3. Call `dijkstra(0, 5)` to compute optimal route from Mumbai-Origin to User-Local.
+   * Expected cost: `28 ms` via Path: `Mumbai-Origin → Bangalore-PoP → Singapore-Edge → User-Local`.
+4. Call `dijkstra(0, 0)` (route to self, expected cost: `0 ms`).
+5. Call `dijkstra(1, 5)` to compute optimal route from Delhi-PoP to User-Local.
+   * Expected cost: `25 ms` via Path: `Delhi-PoP → Singapore-Edge → User-Local`.
+6. Verify cost-optimal choice vs fewest hops (confirms Dijkstra selects lower cost route via Singapore over London).
+7. Create separate 3-node graph with isolated node 2 and verify `dijkstra(0, 2)` returns `-1`.
+8. Update edge cost Bangalore-PoP ↔ Singapore-Edge to `50 ms` (simulates congestion).
+9. Call `dijkstra(0, 5)` again to check rerouting.
+   * Expected cost: `35 ms` via Path: `Mumbai-Origin → Delhi-PoP → Singapore-Edge → User-Local` (rerouted via Delhi).
+10. Update edge cost Bangalore-PoP ↔ Singapore-Edge back to `15 ms` (simulates network restoration).
+11. Call `dijkstra(0, 5)` to confirm path reverts to Bangalore (`28 ms`).
+12. Call `displayGraph()`, `displayRoute(0, 5)` under regular and congested states, and `displayAllRoutes(0)`.

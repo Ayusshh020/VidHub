@@ -1,0 +1,41 @@
+# Simulated Input Data for Recommendation Queue (Queue) Test
+
+The recommendation queue tests simulate user enqueuing/dequeuing and automatic generation of recommendations based on genre-based video pools.
+
+## 1. Test Videos (Basic & Cap Tests)
+
+| Video ID | Title | Genre | Duration (sec) | License |
+| :--- | :--- | :--- | :--- | :--- |
+| VID-001 | Python for Beginners | Education | 1800 | LIC-001 |
+| VID-002 | Python OOP Crash Course | Education | 1800 | LIC-001 |
+| VID-003 | Build a REST API | Tech | 1800 | LIC-001 |
+| VID-004 | Extra Video | Lifestyle | 1800 | LIC-001 |
+
+## 2. Recommendation Video Pool (Used for `populate`)
+
+| Video ID | Title | Genre | Duration (sec) | License |
+| :--- | :--- | :--- | :--- | :--- |
+| VID-101 | Python for Beginners | Education | 1800 | LIC-001 |
+| VID-102 | Python OOP Crash Course | Education | 1800 | LIC-001 |
+| VID-103 | Morning Yoga Routine | Health | 1800 | LIC-001 |
+| VID-104 | Python Django Full Course | Education | 1800 | LIC-001 |
+| VID-105 | Top 10 Travel Hacks | Travel | 1800 | LIC-001 |
+| VID-106 | JavaScript Basics | Education | 1800 | LIC-001 |
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize recommendation queue.
+2. Enqueue `VID-001`.
+3. Enqueue `VID-002`.
+4. Enqueue `VID-003`.
+5. Dequeue one element (expected: `VID-001`).
+6. Dequeue another element (expected: `VID-002`).
+7. Enqueue `VID-001` and `VID-002` again, then display queue.
+8. Clear the queue.
+9. Initialize a small queue capped at capacity 3.
+10. Enqueue `VID-001`, `VID-002`, `VID-003`.
+11. Attempt to enqueue `VID-004` (expected to be ignored due to capacity limit).
+12. Initialize a queue of capacity 5, and invoke `populate(currentGenre="Education", excludeId="VID-102", videoPool)`.
+13. Display the populated queue.
+14. Invoke `populate(currentGenre="Health", excludeId="VID-999", videoPool)`.
+15. Display the newly populated queue.

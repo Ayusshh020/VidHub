@@ -1,0 +1,27 @@
+# Simulated Input Data for License Registry (Hash Map) Test
+
+The license registry tests simulate registering, verifying, revoking, and removing licenses in a Hash Map configuration.
+
+## 1. Test Licenses Registered
+
+| License Key | Owner Name | Owner ID | License Type | Expiry Date | Active Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| MIT-AJ-002 | Arjun Dev | USR-003 | MIT | 2026-06-01 | Active |
+| MIT-AJ-003 | Arjun Dev | USR-003 | MIT | 2026-06-01 | Active |
+| CC-EDU-001 | CodeBase | USR-010 | CC | 2025-12-31 | Active |
+| CC-HLTH-004 | YogaLife | USR-011 | CC | 2025-08-15 | Active |
+| PROP-WG-006 | WebGuru | USR-012 | Proprietary | NEVER | Active |
+
+## 2. Simulated Operations & Parameters
+
+1. Initialize empty license registry.
+2. Register the 5 licenses above.
+3. Attempt to register duplicate license `MIT-AJ-002` (expected: rejection).
+4. Verify active status of `MIT-AJ-002`, `CC-EDU-001`, `PROP-WG-006`.
+5. Verify status of unknown keys `FAKE-KEY-999` and `""` (expected: false).
+6. Revoke `CC-EDU-001` (updates `isActive = false` in registry, does not delete).
+7. Verify `CC-EDU-001` is no longer active but still exists in the registry map.
+8. Get information for `MIT-AJ-002`.
+9. Hard-remove `PROP-WG-006` from registry map.
+10. Attempt to revoke non-existent key `NOT-A-KEY` (expected: false).
+11. Call `displayAll()`, `displayActive()`, and `displayRevoked()`.

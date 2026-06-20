@@ -1,0 +1,35 @@
+# Simulated Input Data for Sharing Network (Directed Graph) Test
+
+The sharing network tests model user-to-user and platform-to-platform content sharing connections, verifying nodes, edges, BFS traversal (reach analysis and hop count levels), and DFS traversal on a Directed Graph.
+
+## 1. Initial Node Sharing Connections Added
+
+| From User (Source) | To User (Destination) | Share Edge |
+| :--- | :--- | :--- |
+| Riya | Dev | Riya → Dev |
+| Riya | TechForum | Riya → TechForum |
+| Dev | CollegeGroup | Dev → CollegeGroup |
+| TechForum | LinkedInPost | TechForum → LinkedInPost |
+| CollegeGroup | PeerA | CollegeGroup → PeerA |
+| CollegeGroup | PeerB | CollegeGroup → PeerB |
+| LinkedInPost | ExternalUser1 | LinkedInPost → ExternalUser1 |
+| LinkedInPost | ExternalUser2 | LinkedInPost → ExternalUser2 |
+
+## 2. Additional Isolated Nodes
+
+* Node ID = `"Lurker"` (user with no shares/edges)
+
+## 3. Simulated Operations & Parameters
+
+1. Initialize empty Directed Graph.
+2. Add the 8 share edges listed above (automatically creates nodes).
+3. Attempt to add duplicate share edge `Riya` → `Dev` (expected: ignored).
+4. Verify presence of nodes `"Riya"` (true) and `"Nobody"` (false).
+5. Verify presence of directed edges `"Riya"` → `"Dev"` (true) and `"Dev"` → `"Riya"` (false).
+6. Run BFS traversal starting from `"Riya"`.
+7. Analyze reachability (reaches all 9 nodes from Riya, only 1 node from PeerA).
+8. Run DFS traversal starting from `"Riya"`.
+9. Compute BFSLevels hop distances starting from `"Riya"`.
+10. Add isolated node `"Lurker"` and check its BFS traversal (returns only itself).
+11. Run BFS traversal from unknown node `"Nobody"` (expected: empty).
+12. Call `displayNetwork()`, `displayBFSTraversal("Riya")`, and `displayDFSTraversal("Riya")`.

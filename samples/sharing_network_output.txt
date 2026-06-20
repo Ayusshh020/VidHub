@@ -1,0 +1,56 @@
+
+==============================================
+  VidHub — Step 11: SharingNetwork Test
+==============================================
+
+[PASS] Empty graph on construction
+[PASS] addShare() — 9 nodes, 8 edges
+[PASS] Duplicate edge silently rejected
+[PASS] hasNode() and hasEdge() correct
+[PASS] BFS from Riya visits all 9 nodes
+[PASS] getReachCount() — Riya:9, PeerA:1
+[PASS] DFS from Riya visits all 9 nodes
+[PASS] BFSLevels() — 4 hops from Riya
+[PASS] BFS on isolated node returns only itself
+[PASS] BFS on unknown node returns empty
+
+--- displayNetwork() ---
+  ==============================================================
+  🌐  Sharing Network  (10 users, 8 shares)
+  ==============================================================
+  Lurker           →  (no outgoing shares)
+  PeerB            →  (no outgoing shares)
+  ExternalUser1    →  (no outgoing shares)
+  LinkedInPost     →  ExternalUser1, ExternalUser2
+  CollegeGroup     →  PeerA, PeerB
+  PeerA            →  (no outgoing shares)
+  Dev              →  CollegeGroup
+  TechForum        →  LinkedInPost
+  ExternalUser2    →  (no outgoing shares)
+  Riya             →  Dev, TechForum
+  ==============================================================
+
+--- displayBFSTraversal('Riya') ---
+  ==============================================================
+  🔄  BFS from "Riya"
+  ==============================================================
+  Level 0 [Origin]: Riya
+  Level 1 [Hop 1]: Dev → TechForum
+  Level 2 [Hop 2]: CollegeGroup → LinkedInPost
+  Level 3 [Hop 3]: PeerA → PeerB → ExternalUser1 → ExternalUser2
+
+  Total reach: 8 users reached from "Riya"
+  ==============================================================
+
+--- displayDFSTraversal('Riya') ---
+  ==============================================================
+  🔍  DFS from "Riya"
+  ==============================================================
+  Visit order: Riya → Dev → CollegeGroup → PeerA → PeerB → TechForum → LinkedInPost → ExternalUser1 → ExternalUser2
+  ==============================================================
+
+
+==============================================
+  All SharingNetwork tests passed!
+==============================================
+
