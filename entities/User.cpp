@@ -1,13 +1,18 @@
+// entities/User.cpp
+// Purpose: Implementation of the User class methods, defining user profile printing and basic getters.
+
 #include "User.h"
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 
+// Prints a standard visual divider line in the console for user profile displays
 static void printUserDivider() {
     std::cout << "  " << std::string(50, '-') << "\n";
 }
 
+// Default constructor initializing user attributes to blank values, defaulting role to viewer
 User::User()
     : userId(""),
       name(""),
@@ -16,6 +21,7 @@ User::User()
       role("viewer")
 {}
 
+// Parameterized constructor initializing a user object with explicit parameters
 User::User(std::string userId,
            std::string name,
            std::string email,
@@ -28,6 +34,7 @@ User::User(std::string userId,
       role(role)
 {}
 
+// Outputs a single-line user entry suitable for list formatting
 void User::displaySummary() const {
     std::cout << "  ["
               << std::left << std::setw(7)  << userId << "] "
@@ -37,6 +44,7 @@ void User::displaySummary() const {
               << "\n";
 }
 
+// Displays detailed user profile information in a clear, formatted block
 void User::displayFull() const {
     printUserDivider();
     std::cout << "  \xF0\x9F\x91\xA4  " << name << "\n";
@@ -49,6 +57,7 @@ void User::displayFull() const {
     printUserDivider();
 }
 
+// Inline accessor definitions for encapsulation
 std::string User::getUserId() const { return userId; }
 std::string User::getName()   const { return name;   }
 std::string User::getRegion() const { return region; }

@@ -1,3 +1,6 @@
+// entities/Creator.cpp
+// Purpose: Implementation of Creator class methods for managing uploaded videos and displays.
+
 #include "Creator.h"
 
 #include <iostream>
@@ -5,10 +8,12 @@
 #include <algorithm>
 #include <string>
 
+// Prints a standard visual divider line in the console for creator profiles
 static void printCreatorDivider() {
     std::cout << "  " << std::string(50, '-') << "\n";
 }
 
+// Default constructor initializing creator properties to empty/zero, override role to creator
 Creator::Creator()
     : User(),
       channelName(""),
@@ -17,6 +22,7 @@ Creator::Creator()
     role = "creator";
 }
 
+// Parameterized constructor initializing a creator object and linking it with parent User fields
 Creator::Creator(std::string userId,
                  std::string name,
                  std::string email,
@@ -28,6 +34,7 @@ Creator::Creator(std::string userId,
       subscriberCount(subscriberCount)
 {}
 
+// Adds video ID to the uploaded history list, preventing duplicate entries
 void Creator::addUploadedVideo(const std::string& videoId) {
     for (const auto& id : uploadedVideoIds) {
         if (id == videoId) return;
@@ -35,6 +42,7 @@ void Creator::addUploadedVideo(const std::string& videoId) {
     uploadedVideoIds.push_back(videoId);
 }
 
+// Removes a video ID from the creator's upload list when deleted
 void Creator::removeUploadedVideo(const std::string& videoId) {
     uploadedVideoIds.erase(
         std::remove(uploadedVideoIds.begin(), uploadedVideoIds.end(), videoId),
@@ -42,6 +50,7 @@ void Creator::removeUploadedVideo(const std::string& videoId) {
     );
 }
 
+// Basic field accessors for encapsulation support
 std::string              Creator::getChannelName()     const { return channelName;      }
 long                     Creator::getSubscriberCount() const { return subscriberCount;  }
 std::vector<std::string> Creator::getUploadedVideoIds()const { return uploadedVideoIds; }
@@ -49,6 +58,7 @@ int                      Creator::getTotalUploads()    const {
     return static_cast<int>(uploadedVideoIds.size());
 }
 
+// Prints a one-line summary of creator metrics for catalog search/list functions
 void Creator::displaySummary() const {
     std::cout << "  ["
               << std::left << std::setw(7)  << userId      << "] "
@@ -58,6 +68,7 @@ void Creator::displaySummary() const {
               << "\n";
 }
 
+// Displays a detailed dashboard showing creator identity, metrics, and list of uploaded video assets
 void Creator::displayFull() const {
     printCreatorDivider();
     std::cout << "  \xF0\x9F\x8E\xAC  " << channelName << "  [CREATOR]\n";

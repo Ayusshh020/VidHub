@@ -1,9 +1,13 @@
+// entities/Video.cpp
+// Purpose: Implementation of the Video class methods, handling playback stats and popularity score computations.
+
 #include "Video.h"
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 
+// Helper function to format duration in seconds into a human-readable HHh MMm SSs string
 static std::string formatDuration(int totalSeconds) {
     int hours   = totalSeconds / 3600;
     int minutes = (totalSeconds % 3600) / 60;
@@ -18,10 +22,12 @@ static std::string formatDuration(int totalSeconds) {
     return result;
 }
 
+// Utility function to print a uniform visual divider for console displays
 static void printDivider() {
     std::cout << "  " << std::string(54, '-') << "\n";
 }
 
+// Default constructor initializing all fields to empty/zero values
 Video::Video()
     : videoId(""),
       title(""),
@@ -36,6 +42,7 @@ Video::Video()
       engagementScore(0.0)
 {}
 
+// Parameterized constructor mapping user-supplied parameters to class members
 Video::Video(std::string id,
              std::string title,
              std::string creatorId,
@@ -56,22 +63,26 @@ Video::Video(std::string id,
       engagementScore(0.0)
 {}
 
+// Increments the video's views and recalculates popularity score
 void Video::incrementViews() {
     viewCount++;
     recalculateScore();
 }
 
+// Increments the video's likes and recalculates popularity score
 void Video::addLike() {
     likeCount++;
     recalculateScore();
 }
 
+// Adds watch time duration in seconds and updates popularity score
 void Video::addWatchTime(int seconds) {
     if (seconds > 0)
         totalWatchTimeSec += seconds;
     recalculateScore();
 }
 
+// Recalculates popularity rating using weights: views (0.5), likes (2.0), and retention ratio (1000.0)
 void Video::recalculateScore() {
     double watchRatio = 0.0;
     if (durationSec > 0)
@@ -83,10 +94,12 @@ void Video::recalculateScore() {
                     + (watchRatio * 1000.0);
 }
 
+// Simple getter returning the latest engagement score
 double Video::getEngagementScore() const {
     return engagementScore;
 }
 
+// Prints a single-line summary of video stats, formatted for tables
 void Video::displaySummary() const {
     std::cout << "  ["
               << std::left << std::setw(7) << videoId << "] "
@@ -98,6 +111,7 @@ void Video::displaySummary() const {
               << "\n";
 }
 
+// Prints a detailed multi-line block showing all metadata and engagement metrics
 void Video::displayFull() const {
     printDivider();
     std::cout << "  \xF0\x9F\x8E\xAC  " << title << "\n";
@@ -124,6 +138,7 @@ void Video::displayFull() const {
     printDivider();
 }
 
+// Overloaded equality comparison operator, checking uniqueness by video ID
 bool Video::operator==(const Video& other) const {
     return this->videoId == other.videoId;
 }

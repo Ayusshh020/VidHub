@@ -1,23 +1,30 @@
+// modules/RankingSystem.cpp
+// Purpose: Implementation of the RankingSystem class, maintaining the Max Heap for dynamic popular content rankings.
+
 #include "RankingSystem.h"
 
 #include <iostream>
 #include <iomanip>
 
+// Helper to print a uniform divider line for rankings display
 static void printRSDivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
 }
 
+// Returns a medal icon or blank space depending on the rank
 static std::string medal(int rank) {
-    if (rank == 1) return "\xF0\x9F\xA5\x87";
-    if (rank == 2) return "\xF0\x9F\xA5\x88";
-    if (rank == 3) return "\xF0\x9F\xA5\x89";
+    if (rank == 1) return "\xF0\x9F\xA5\x87"; // Gold
+    if (rank == 2) return "\xF0\x9F\xA5\x88"; // Silver
+    if (rank == 3) return "\xF0\x9F\xA5\x89"; // Bronze
     return "  ";
 }
 
+// Constructor setting heap dirty initially to false
 RankingSystem::RankingSystem()
     : heapDirty(false)
 {}
 
+// Rebuilds the Max Heap from scratch using items in videoStore
 void RankingSystem::rebuildHeap() const {
     while (!heap.empty())
         heap.pop();
@@ -25,14 +32,16 @@ void RankingSystem::rebuildHeap() const {
     for (const auto& pair : videoStore)
         heap.push(pair.second);
 
-    heapDirty = false;
+    heapDirty = false; // Reset dirty flag
 }
 
+// Registers a video. Marks heap as dirty so it's rebuilt on the next query.
 void RankingSystem::addVideo(const Video& video) {
     videoStore[video.videoId] = video;
     heapDirty = true;
 }
 
+// Updates an existing video metrics (views/likes) and flags heap rebuild
 bool RankingSystem::updateVideo(const Video& updatedVideo) {
     auto it = videoStore.find(updatedVideo.videoId);
     if (it == videoStore.end())
@@ -42,6 +51,7 @@ bool RankingSystem::updateVideo(const Video& updatedVideo) {
     return true;
 }
 
+// Erases a video from the database and flags heap rebuild
 bool RankingSystem::removeVideo(const std::string& videoId) {
     auto erased = videoStore.erase(videoId);
     if (erased > 0) {
@@ -51,16 +61,18 @@ bool RankingSystem::removeVideo(const std::string& videoId) {
     return false;
 }
 
+// Returns the top item of the heap (highest engagement score). Rebuilds heap first if dirty.
 const Video& RankingSystem::peekTop() const {
     if (heapDirty) rebuildHeap();
     return heap.top();
 }
 
+// Returns the top-K elements by copying the heap and popping K times (O(k log n))
 std::vector<Video> RankingSystem::getTopK(int k) const {
     if (heapDirty) rebuildHeap();
 
     std::vector<Video> result;
-    MaxHeap copy = heap;
+    MaxHeap copy = heap; // Create a temporary copy to destructively extract top elements
 
     int extracted = 0;
     while (!copy.empty() && extracted < k) {
@@ -83,6 +95,7 @@ bool RankingSystem::contains(const std::string& videoId) const {
     return videoStore.count(videoId) > 0;
 }
 
+// Displays formatted platform rankings list
 void RankingSystem::displayRankings(int topK) const {
     std::cout << "\n";
     printRSDivider('=');

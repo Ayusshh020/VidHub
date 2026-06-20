@@ -1,3 +1,6 @@
+// ui/ConsoleUI.cpp
+// Purpose: Implementation of ConsoleUI class methods, coordinating the user input loop and routing actions.
+
 #include "ConsoleUI.h"
 #include "../utils/Helpers.h"
 
@@ -8,14 +11,16 @@
 
 static const std::string VIDHUB_VERSION = "1.0.0";
 
+// Constructor mapping reference dummy database and sizing watch history and recommendations
 ConsoleUI::ConsoleUI(DummyData& data)
     : data(data),
       activeUserId(""),
       activeRole(""),
-      activeWatchHistory(20),
-      activeRecommendations(8)
+      activeWatchHistory(20),  // Capped at 20 watched videos
+      activeRecommendations(8) // Capped at 8 recommendations
 {}
 
+// Clears screen dynamically depending on operating system
 void ConsoleUI::clearScreen() const {
 #ifdef _WIN32
     system("cls");

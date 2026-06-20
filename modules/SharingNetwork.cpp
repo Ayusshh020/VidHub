@@ -1,3 +1,6 @@
+// modules/SharingNetwork.cpp
+// Purpose: Implementation of the SharingNetwork directed graph operations.
+
 #include "SharingNetwork.h"
 #include "../utils/Helpers.h"
 
@@ -6,42 +9,50 @@
 #include <queue>
 #include <unordered_set>
 
+// Prints a visual divider line for graph output tables
 static void printSNDivider(char c = '-') {
     std::cout << "  " << std::string(62, c) << "\n";
 }
 
+// Registers a node in the graph, preparing its adjacency list entry
 void SharingNetwork::addNode(const std::string& userId) {
     nodes.insert(userId);
     if (adjList.find(userId) == adjList.end())
         adjList[userId] = {};
 }
 
+// Resolves a name to an existing exact node in the graph (case-insensitive and substring match)
 std::string SharingNetwork::getExactNodeName(const std::string& name) const {
     for (const auto& node : nodes) {
         if (toLower(node) == toLower(name)) {
-            return node;
+            return node; // exact match
         }
     }
     for (const auto& node : nodes) {
         if (toLower(node).find(toLower(name)) != std::string::npos) {
-            return node;
+            return node; // substring match
         }
     }
     return name;
 }
 
+// Creates a directed sharing edge from fromUser to toUser, registering nodes if needed
 void SharingNetwork::addShare(const std::string& fromUser,
                                const std::string& toUser) {
     std::string resolvedFrom = getExactNodeName(fromUser);
     std::string resolvedTo = getExactNodeName(toUser);
     addNode(resolvedFrom);
     addNode(resolvedTo);
+
     auto& neighbors = adjList[resolvedFrom];
+    // Avoid duplicate directed edges
     for (const auto& n : neighbors)
         if (n == resolvedTo) return;
+
     neighbors.push_back(resolvedTo);
 }
 
+// Breadth First Search (BFS) to traverse the reachable sharing paths level by level (O(V+E))
 std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     std::vector<std::string>        result;
     std::unordered_set<std::string> visited;
@@ -71,6 +82,7 @@ std::vector<std::string> SharingNetwork::BFS(const std::string& source) const {
     return result;
 }
 
+// BFS traversal that segments nodes by hop level partitions from the source node
 std::vector<std::vector<std::string>>
 SharingNetwork::BFSLevels(const std::string& source) const {
     std::vector<std::vector<std::string>> levels;
@@ -102,11 +114,12 @@ SharingNetwork::BFSLevels(const std::string& source) const {
                 }
             }
         }
-        levels.push_back(currentLevel);
+        levels.push_back(currentLevel); // Save this level slice
     }
     return levels;
 }
 
+// Recursive helper for Depth First Search traversal
 void SharingNetwork::dfsHelper(const std::string& node,
                                 std::unordered_set<std::string>& visited,
                                 std::vector<std::string>& result) const {
@@ -122,6 +135,7 @@ void SharingNetwork::dfsHelper(const std::string& node,
     }
 }
 
+// Depth First Search (DFS) traversal returning nodes in visit sequence (O(V+E))
 std::vector<std::string> SharingNetwork::DFS(const std::string& source) const {
     std::vector<std::string>        result;
     std::unordered_set<std::string> visited;
@@ -132,6 +146,7 @@ std::vector<std::string> SharingNetwork::DFS(const std::string& source) const {
     return result;
 }
 
+// Calculates how many users are reached from source using BFS size
 int SharingNetwork::getReachCount(const std::string& source) const {
     return static_cast<int>(BFS(source).size());
 }
@@ -140,6 +155,7 @@ int SharingNetwork::getNodeCount() const {
     return static_cast<int>(nodes.size());
 }
 
+// Sums all edge links (shares) present in the graph
 int SharingNetwork::getEdgeCount() const {
     int total = 0;
     for (const auto& pair : adjList)
@@ -165,6 +181,7 @@ bool SharingNetwork::hasEdge(const std::string& from,
     return false;
 }
 
+// Prints the graph representation listing each node and its outgoing share paths
 void SharingNetwork::displayNetwork() const {
     std::cout << "\n";
     printSNDivider('=');
@@ -190,6 +207,7 @@ void SharingNetwork::displayNetwork() const {
     std::cout << "\n";
 }
 
+// Prints a level-by-level (hop-by-hop) reach summary using BFS
 void SharingNetwork::displayBFSTraversal(const std::string& source) const {
     std::cout << "\n";
     printSNDivider('=');
@@ -222,6 +240,7 @@ void SharingNetwork::displayBFSTraversal(const std::string& source) const {
     std::cout << "\n";
 }
 
+// Prints the DFS sequence starting from source
 void SharingNetwork::displayDFSTraversal(const std::string& source) const {
     std::cout << "\n";
     printSNDivider('=');
@@ -244,6 +263,7 @@ void SharingNetwork::displayDFSTraversal(const std::string& source) const {
     std::cout << "\n";
 }
 
+// Triggers both BFS and DFS visual tools for comparative analysis
 void SharingNetwork::displayReachAnalysis(const std::string& source) const {
     std::string resolvedSource = getExactNodeName(source);
     displayBFSTraversal(resolvedSource);

@@ -81,6 +81,10 @@ VidHub/
 │   ├── VideoSegmentManager.h    # Deque implementation
 │   ├── SharingNetwork.h / .cpp  # Directed Graph BFS/DFS
 │   └── DeliveryOptimizer.h      # Weighted Graph & Dijkstra's Algorithm
+├── samples/
+│   ├── <module>_input.txt       # Example inputs used in automated testing drivers
+│   ├── <module>_output.txt      # Direct captured console outputs of unit tests
+│   └── README.md                # Summary index of module test cases
 ├── ui/
 │   ├── ConsoleUI.h / .cpp       # Command Line Interface (CLI) loop and menus
 │   └── ...

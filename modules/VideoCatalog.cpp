@@ -1,23 +1,29 @@
+// modules/VideoCatalog.cpp
+// Purpose: Implementation of VideoCatalog BST operations, sorting by title and enabling search/filtering.
+
 #include "VideoCatalog.h"
 #include "../utils/Helpers.h"
 
 #include <iostream>
 #include <iomanip>
-#include <algorithm>
 #include <cctype>
 
+// Helper to print a visual divider line for the Video Catalog display
 static void printVCDivider(char c = '-') {
     std::cout << "  " << std::string(66, c) << "\n";
 }
 
+// Constructor initializing root and node count
 VideoCatalog::VideoCatalog()
     : root(nullptr), nodeCount(0)
 {}
 
+// Destructor trigger clearing the nodes in tree
 VideoCatalog::~VideoCatalog() {
     clearHelper(root);
 }
 
+// Post-order traversal to delete all nodes recursively
 void VideoCatalog::clearHelper(BSTNode* node) {
     if (node == nullptr) return;
     clearHelper(node->left);
@@ -25,6 +31,7 @@ void VideoCatalog::clearHelper(BSTNode* node) {
     delete node;
 }
 
+// Recursive insert helper. Places node in BST alphabetically sorted by title.
 VideoCatalog::BSTNode*
 VideoCatalog::insertHelper(BSTNode* node, const Video& video) {
     if (node == nullptr) {
@@ -32,9 +39,11 @@ VideoCatalog::insertHelper(BSTNode* node, const Video& video) {
         return new BSTNode(video);
     }
 
+    // Skip duplicates (uniqueness enforcement by videoId)
     if (video.videoId == node->data.videoId)
         return node;
 
+    // Alphabetical comparisons dictate tree placement
     if (video.title < node->data.title)
         node->left  = insertHelper(node->left,  video);
     else
@@ -43,10 +52,12 @@ VideoCatalog::insertHelper(BSTNode* node, const Video& video) {
     return node;
 }
 
+// Inserts a video into the catalog
 void VideoCatalog::insert(const Video& video) {
     root = insertHelper(root, video);
 }
 
+// Returns the node with the minimum value (leftmost leaf in a subtree)
 VideoCatalog::BSTNode*
 VideoCatalog::getMinNode(BSTNode* node) const {
     while (node->left != nullptr)
@@ -54,49 +65,60 @@ VideoCatalog::getMinNode(BSTNode* node) const {
     return node;
 }
 
+// Recursive delete helper to remove a node by videoId
 VideoCatalog::BSTNode*
 VideoCatalog::removeHelper(BSTNode* node, const std::string& videoId) {
     if (node == nullptr)
         return nullptr;
 
+    // Node matches ID target
     if (toLower(videoId) == toLower(node->data.videoId)) {
         nodeCount--;
 
+        // Case 1: Leaf node (no children)
         if (node->left == nullptr && node->right == nullptr) {
             delete node;
             return nullptr;
         }
 
+        // Case 2: One child (right child only)
         if (node->left == nullptr) {
             BSTNode* temp = node->right;
             delete node;
             return temp;
         }
 
+        // Case 2: One child (left child only)
         if (node->right == nullptr) {
             BSTNode* temp = node->left;
             delete node;
             return temp;
         }
 
+        // Case 3: Two children
+        // Find the in-order successor (minimum node in the right subtree)
         BSTNode* successor    = getMinNode(node->right);
-        node->data            = successor->data;
+        node->data            = successor->data; // Copy successor's value
+        // Delete successor node
         node->right = removeHelper(node->right, successor->data.videoId);
-        nodeCount++;
+        nodeCount++; // Adjust count since recursive call decremented it
         return node;
     }
 
+    // Recursively search both subtrees since deletion is by videoId but tree is sorted by title
     node->left  = removeHelper(node->left,  videoId);
     node->right = removeHelper(node->right, videoId);
     return node;
 }
 
+// Deletes a video from the catalog
 bool VideoCatalog::remove(const std::string& videoId) {
     int before = nodeCount;
     root = removeHelper(root, videoId);
-    return nodeCount < before;
+    return nodeCount < before; // Returns true if a node was deleted
 }
 
+// Searches the tree by exact title using BST logic (O(log n))
 VideoCatalog::BSTNode*
 VideoCatalog::searchByTitle(BSTNode* node, const std::string& title) const {
     if (node == nullptr)              return nullptr;
@@ -105,12 +127,14 @@ VideoCatalog::searchByTitle(BSTNode* node, const std::string& title) const {
     return                                   searchByTitle(node->right, title);
 }
 
+// Returns exact matching video reference or nullptr
 const Video* VideoCatalog::searchExact(const std::string& title) const {
     BSTNode* found = searchByTitle(root, title);
     if (found == nullptr) return nullptr;
     return &found->data;
 }
 
+// In-order traversal helper searching for titles matching keyword sub-strings
 void VideoCatalog::keywordHelper(BSTNode* node,
                                   const std::string& keyword,
                                   std::vector<Video>& result) const {
@@ -121,12 +145,14 @@ void VideoCatalog::keywordHelper(BSTNode* node,
     keywordHelper(node->right, keyword, result);
 }
 
+// Case-insensitive search by keyword
 std::vector<Video> VideoCatalog::searchByKeyword(const std::string& keyword) const {
     std::vector<Video> result;
     keywordHelper(root, toLower(keyword), result);
     return result;
 }
 
+// In-order traversal helper searching for matching genre categories
 void VideoCatalog::genreHelper(BSTNode* node,
                                 const std::string& genre,
                                 std::vector<Video>& result) const {
@@ -137,12 +163,14 @@ void VideoCatalog::genreHelper(BSTNode* node,
     genreHelper(node->right, genre, result);
 }
 
+// Case-insensitive search by genre
 std::vector<Video> VideoCatalog::searchByGenre(const std::string& genre) const {
     std::vector<Video> result;
     genreHelper(root, toLower(genre), result);
     return result;
 }
 
+// Traverse the BST in-order to construct a sorted list
 void VideoCatalog::inOrderHelper(BSTNode* node,
                                   std::vector<Video>& result) const {
     if (node == nullptr) return;
@@ -151,6 +179,7 @@ void VideoCatalog::inOrderHelper(BSTNode* node,
     inOrderHelper(node->right, result);
 }
 
+// Returns all catalog elements sorted alphabetically by title
 std::vector<Video> VideoCatalog::getAllSorted() const {
     std::vector<Video> result;
     inOrderHelper(root, result);
@@ -160,6 +189,7 @@ std::vector<Video> VideoCatalog::getAllSorted() const {
 int  VideoCatalog::getCount()  const { return nodeCount;    }
 bool VideoCatalog::isEmpty()   const { return root == nullptr; }
 
+// Checks if catalog contains a specific video ID
 bool VideoCatalog::contains(const std::string& videoId) const {
     std::vector<Video> all = getAllSorted();
     for (const auto& v : all)
@@ -167,6 +197,7 @@ bool VideoCatalog::contains(const std::string& videoId) const {
     return false;
 }
 
+// Displays all catalog items
 void VideoCatalog::displayAll() const {
     std::cout << "\n";
     printVCDivider('=');
@@ -200,6 +231,7 @@ void VideoCatalog::displayAll() const {
     std::cout << "\n";
 }
 
+// Prints catalog search results
 void VideoCatalog::displaySearchResults(const std::vector<Video>& results,
                                          const std::string& query) const {
     std::cout << "\n";
